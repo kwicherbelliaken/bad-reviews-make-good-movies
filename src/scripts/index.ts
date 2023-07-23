@@ -1,8 +1,8 @@
 import { qs } from "./utils";
-import { TCanvas } from "./webgl/TCanvas";
+import { FlowerCanvas } from "./webgl/FlowerCanvas";
 
-const canvas = new TCanvas(qs<HTMLDivElement>(".canvas-container"));
+const canvas = new FlowerCanvas(qs<HTMLCanvasElement>("#canvas"));
 
 window.addEventListener("beforeunload", () => {
-  canvas.dispose();
+  canvas.dispose?.();
 });
