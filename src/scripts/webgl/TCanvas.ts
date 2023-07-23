@@ -1,3 +1,4 @@
+//! DELETE THIS FILE
 import * as THREE from 'three'
 import { gl } from './core/WebGL'
 import { Assets, loadAssets } from './utils/assetLoader'
