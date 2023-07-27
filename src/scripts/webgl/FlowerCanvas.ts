@@ -2,6 +2,9 @@ import * as THREE from "three";
 
 import vertexShader from "./shader/flowerVertexShader.glsl";
 import fragmentShader from "./shader/flowerFragmentShader.glsl";
+import { qs } from "../utils";
+
+type CanvasRef = `#${string}`;
 
 // [ ]: fix how this script is run..
 // [ ]: properly sort out the types here
@@ -17,9 +20,11 @@ const createCamera = (): THREE.OrthographicCamera => {
 };
 
 const createRenderer = (
-  canvasElement: HTMLCanvasElement,
+  canvasRef: CanvasRef,
   device: any
 ): THREE.WebGLRenderer => {
+  const canvasElement = qs<HTMLCanvasElement>(canvasRef);
+
   const renderer = new THREE.WebGLRenderer({
     canvas: canvasElement,
     alpha: true,
@@ -65,8 +70,8 @@ export class FlowerCanvas {
 
   private basicMaterial!: THREE.MeshBasicMaterial;
 
-  constructor(canvasElement: HTMLCanvasElement) {
-    this.renderer = createRenderer(canvasElement, this.device);
+  constructor(canvasRef: CanvasRef) {
+    this.renderer = createRenderer(canvasRef, this.device);
 
     this.init();
 
