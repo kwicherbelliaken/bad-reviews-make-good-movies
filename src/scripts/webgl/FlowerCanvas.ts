@@ -85,6 +85,8 @@ export class FlowerCanvas {
 
     this.setUpHandleResize();
 
+    this.setUpCleanup();
+
     this.setUpRender();
   }
 
@@ -190,6 +192,14 @@ export class FlowerCanvas {
 
   private setUpRender() {
     this.render = this.render.bind(this);
+  }
+
+  private setUpCleanup() {
+    window.addEventListener("beforeunload", () => {
+      this.renderer.setAnimationLoop(null);
+      this.mainScene.clear();
+      this.shaderScene.clear();
+    });
   }
 
   private handleResize() {

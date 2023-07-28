@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { FlowerCanvas } from "../../scripts/webgl/FlowerCanvas";
 
 // [ ]: clean up the webgl folder
@@ -8,9 +8,19 @@ import { FlowerCanvas } from "../../scripts/webgl/FlowerCanvas";
 // [ ]: make note of this max-w-[60ch]
 
 const FlowerAnimation = () => {
+  const canvasRef = useRef(null);
+
   useEffect(() => {
-    new FlowerCanvas("#canvas");
+    if (canvasRef != null) {
+      new FlowerCanvas("#canvas");
+    }
   }, []);
+
+  return (
+    <div className="fixed w-full h-full">
+      <canvas id="canvas" ref={canvasRef} />;
+    </div>
+  );
 };
 
 export default FlowerAnimation;
