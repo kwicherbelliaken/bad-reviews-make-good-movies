@@ -18,7 +18,7 @@ const FlowerAnimation = () => {
 
   return (
     <div className="fixed w-full h-full">
-      <canvas id="canvas" ref={canvasRef} />;
+      <canvas id="canvas" ref={canvasRef} />
     </div>
   );
 };
