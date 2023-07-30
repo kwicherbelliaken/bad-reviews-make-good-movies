@@ -1,8 +1,12 @@
 ---
+import Header from "../components/Header";
+import FlowerAnimation from "../components/FlowerAnimation";
 import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="Welcome to Astro.">
   <main class="m-auto">
+    <Header />
+    <FlowerAnimation client:visible />
   </main>
 </Layout>
