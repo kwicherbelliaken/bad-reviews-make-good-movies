@@ -1,5 +1,6 @@
 ---
 import Header from "../components/Header";
+import StarMenu from "../components/StarMenu";
 import FlowerAnimation from "../components/FlowerAnimation";
 import Layout from "../layouts/Layout.astro";
 ---
@@ -7,6 +8,9 @@ import Layout from "../layouts/Layout.astro";
 <Layout title="Welcome to Astro.">
   <main class="m-auto">
     <Header />
-    <FlowerAnimation client:visible />
+    <div class="">
+      <StarMenu client:load />
+      <FlowerAnimation client:visible />
+    </div>
   </main>
 </Layout>
