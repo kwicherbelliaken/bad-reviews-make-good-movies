@@ -2,7 +2,7 @@
 //! original 'moveTransitionClassname'
 // const moveTransitionClassname = `transition transition-[top, right] ease-in-out duration-750`;
 
-import { useEffect, useRef, useState } from "react";
+import { SyntheticEvent, useEffect, useRef, useState } from "react";
 
 //  translate-x-1/2 translate-y-1/2
 const moveTransitionClassname = `right-1/2`;
@@ -81,8 +81,6 @@ const StarAnimation = ({
 );
 
 const StarMenu = () => {
-  //? I could use JS to determine whether I am in the top right corner and render a particular component above another.
-
   console.log("StarMenu rendered");
 
   const [showAnimation, setShowAnimation] = useState(false);
@@ -91,10 +89,48 @@ const StarMenu = () => {
     setShowAnimation(!showAnimation);
   };
 
+  // [ ]: refactor this
+  useEffect(() => {
+    const timeRegister = () => {
+      let startTime = new Date();
+
+      const getElapsedTime = () => {
+        const currentTime = new Date();
+
+        const elapsedTime = currentTime.getTime() - startTime.getTime();
+
+        return elapsedTime;
+      };
+
+      return {
+        flushStartTime: () => (startTime = new Date()),
+        getElapsedTime,
+      };
+    };
+
+    const idsToCheck = [
+      "star-animation-static",
+      "star-animation",
+      "star-animation-touchzone",
+    ];
+
+    const timer = timeRegister();
+
+    window.addEventListener("mousemove", (event) => {
+      if (!idsToCheck.includes((event.target as HTMLElement).id)) {
+        if (timer.getElapsedTime() > 1000) {
+          setShowAnimation(false);
+        }
+      } else {
+        timer.flushStartTime();
+      }
+    });
+  }, []);
+
   const StarAnimation = (
     <div
+      id="star-animation"
       className="absolute right-0 overflow-visible w-full h-full z-10 bg-transparent group"
-      onMouseLeave={() => setShowAnimation(false)}
     >
       <div
         className={`absolute z-10 w-16 right-0 top-0 m-8 cursor-pointer group outline transition-[right,top] ease-in-out duration-1000 group-hover:top-1/2 group-hover:right-1/2 translate-y-1/2 translate-x-1/2`}
@@ -111,11 +147,27 @@ const StarMenu = () => {
     </div>
   );
 
-  const StarAnimationTouchzone = (
+  const StarAnimationStatic = (
     <div
-      className="outline outline-pink-400 absolute right-0 overflow-visible w-1/3 h-1/3 z-10"
-      onMouseOver={handleShowAnimation}
-    />
+      id="star-animation-static"
+      className="absolute right-0 overflow-visible w-full h-full z-10 bg-transparent"
+    >
+      <div
+        className={`absolute z-10 w-16 right-0 top-0 m-8 cursor-pointer outline`}
+      >
+        <img src="/star.png" />
+      </div>
+    </div>
+  );
+
+  const StarAnimationTouchzone = (
+    <>
+      <div
+        id="star-animation-touchzone"
+        className="outline outline-pink-400 absolute right-0 overflow-visible w-1/3 h-1/3 z-10"
+        onMouseOver={handleShowAnimation}
+      />
+    </>
   );
 
   if (showAnimation) {
@@ -124,7 +176,7 @@ const StarMenu = () => {
 
   return (
     <>
-      {StarAnimation}
+      {StarAnimationStatic}
       {StarAnimationTouchzone}
     </>
   );
