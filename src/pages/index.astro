@@ -3,6 +3,29 @@ import Header from "../components/Header";
 import StarMenu from "../components/StarMenu";
 import FlowerAnimation from "../components/FlowerAnimation";
 import Layout from "../layouts/Layout.astro";
+//! see notes on github issue
+
+const baseEndpoint = "https://api.letterboxd.com/api/v0/";
+
+const filmsEndpoint = `${baseEndpoint}films`;
+const tokenEndpoint = `${baseEndpoint}auth/token`;
+
+const tokenRes = await fetch(tokenEndpoint, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/x-www-form-urlencoded",
+    Accept: "application/json",
+  },
+  body: JSON.stringify({
+    grant_type: "password",
+    username: "slackermorris",
+    password: "<NOT_TELLING>",
+  }),
+});
+
+const toSalt = `'POST\u'`;
+
+const token = await tokenRes.json();
 ---
 
 <Layout title="Welcome to Astro.">

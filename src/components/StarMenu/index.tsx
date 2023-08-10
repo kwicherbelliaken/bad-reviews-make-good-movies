@@ -7,7 +7,6 @@ const StarMenu = () => {
     setShowAnimation(!showAnimation);
   };
 
-  // [ ]: refactor this
   useEffect(() => {
     const animationManager = () => {
       const onHoverAnimationDuration = 1000;
