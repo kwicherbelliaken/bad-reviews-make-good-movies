@@ -13,7 +13,7 @@ type AsyncHandler<T extends Handler> = (
 
 type AsyncAPIGatewayProxyHandler = AsyncHandler<APIGatewayProxyHandlerV2>;
 
-const reportError = (message: string) => {
+const _reportError = (message: string) => {
   console.error(message);
 };
 
@@ -30,7 +30,7 @@ const handler = (lambda: AsyncAPIGatewayProxyHandler) => {
       statusCode = 200;
     } catch (e) {
       const errorMessage = getErrorMessage(e);
-      reportError(errorMessage);
+      _reportError(errorMessage);
 
       body = { error: errorMessage };
       statusCode = 500;
