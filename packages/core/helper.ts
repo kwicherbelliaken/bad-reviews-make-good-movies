@@ -17,6 +17,6 @@ function toErrorWithMessage(maybeError: unknown): ErrorWithMessage {
   return new Error(JSON.stringify(maybeError));
 }
 
-function getErrorMessage(error: unknown) {
+export function getErrorMessage(error: unknown) {
   return toErrorWithMessage(error).message;
 }

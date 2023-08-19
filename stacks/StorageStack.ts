@@ -11,6 +11,5 @@ export function StorageStack({ stack }: StackContext) {
     primaryIndex: { partitionKey: "userId", sortKey: "username" },
   });
 
-
   return usersTable;
 }
