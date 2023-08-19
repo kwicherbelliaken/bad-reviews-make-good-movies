@@ -1,4 +1,5 @@
 import type { Handler, APIGatewayProxyHandlerV2 } from "aws-lambda";
+import { getErrorMessage } from "./helper";
 
 import { ApiHandler } from "sst/node/api";
 
