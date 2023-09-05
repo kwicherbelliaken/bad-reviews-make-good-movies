@@ -3,12 +3,17 @@ import { StackContext, Table } from "sst/constructs";
 // [ ]: this should be single table design
 
 export function StorageStack({ stack }: StackContext) {
-  const usersTable = new Table(stack, "Users", {
+  const usersTable = new Table(stack, "BRMGMTable", {
     fields: {
-      userId: "string",
-      username: "string",
+      PK: "string",
+      SK: "string",
+      GSI1PK: "string",
+      GSI1SK: "string",
     },
-    primaryIndex: { partitionKey: "userId", sortKey: "username" },
+    primaryIndex: { partitionKey: "PK", sortKey: "SK" },
+    globalIndexes: {
+      GSI1: { partitionKey: "GSI1PK", sortKey: "GSI1SK", projection: "all" },
+    },
   });
 
   return usersTable;
