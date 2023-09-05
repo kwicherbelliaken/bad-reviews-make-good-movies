@@ -25,5 +25,7 @@ export const handler = handlerWrapper(async (event) => {
 
   await dynamoDb.update(params);
 
+  // [ ]: I think it would be better if the update  call return the recently updated item
+
   return { status: true };
 });

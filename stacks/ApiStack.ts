@@ -17,6 +17,7 @@ export function ApiStack({ stack }: StackContext) {
     },
     routes: {
       "POST /users": "functions/src/create.handler",
+      "GET /users/{id}": "functions/src/get.handler",
       "PUT /users/{id}": "functions/src/update.handler",
     },
   });
