@@ -3,7 +3,7 @@ import { StackContext, Table } from "sst/constructs";
 // [ ]: this should be single table design
 
 export function StorageStack({ stack }: StackContext) {
-  const usersTable = new Table(stack, "BRMGMTable", {
+  const brmgmTable = new Table(stack, "BRMGMTable", {
     fields: {
       PK: "string",
       SK: "string",
@@ -16,5 +16,5 @@ export function StorageStack({ stack }: StackContext) {
     },
   });
 
-  return usersTable;
+  return brmgmTable;
 }
