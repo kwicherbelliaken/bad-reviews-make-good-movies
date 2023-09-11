@@ -11,6 +11,11 @@ export default {
     };
   },
   stacks(app) {
+    // remove all resources when non-prod stages are removed
+    if (app.stage !== "prod") {
+      app.setDefaultRemovalPolicy("destroy");
+    }
+
     app
       .stack(StorageStack)
       .stack(ApiStack)

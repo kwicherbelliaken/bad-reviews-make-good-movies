@@ -11,7 +11,7 @@ export const handler = handlerWrapper(async (event) => {
   const data = JSON.parse(event.body);
 
   const params = {
-    TableName: process.env.USERS_TABLE_NAME!,
+    TableName: process.env.BRMGM_TABLE_NAME!,
     Key: {
       userId: event.pathParameters?.id,
       username: data.username,

@@ -2,22 +2,22 @@ import { Api, use, type StackContext } from "sst/constructs";
 import { StorageStack } from "./StorageStack";
 
 export function ApiStack({ stack }: StackContext) {
-  const usersDb = use(StorageStack);
+  const brmgmDb = use(StorageStack);
 
   // [ ]: perhaps declare this in another stack and import the StorageStack to it
 
   const api = new Api(stack, "api", {
     defaults: {
       function: {
-        permissions: [usersDb],
+        permissions: [brmgmDb],
         environment: {
-          USERS_TABLE_NAME: usersDb.tableName,
+          BRMGM_TABLE_NAME: brmgmDb.tableName,
         },
       },
     },
     routes: {
       "POST /users": "functions/src/create.handler",
-      "GET /users/{id}": "functions/src/get.handler",
+      "GET /users/{username}": "functions/src/get.handler",
       "PUT /users/{id}": "functions/src/update.handler",
     },
   });

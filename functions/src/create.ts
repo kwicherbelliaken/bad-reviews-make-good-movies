@@ -1,7 +1,5 @@
 import { default as handlerWrapper } from "../../packages/core/handler";
-import dynamoDb from "../../packages/core/dynamodb";
-
-import * as uuid from "uuid";
+import { User, createUser } from "../../packages/schema/User";
 
 // [x]: perform validation on the body
 // [x]: move this into its own service file
@@ -18,15 +16,7 @@ export const handler = handlerWrapper(async (event) => {
 
   const data = JSON.parse(event.body);
 
-  const params = {
-    TableName: process.env.USERS_TABLE_NAME!,
-    Item: {
-      userId: uuid.v1(),
-      username: data.username,
-    },
-  };
+  const user = await createUser(new User(data.username));
 
-  await dynamoDb.put(params);
-
-  return params.Item;
+  return user;
 });
