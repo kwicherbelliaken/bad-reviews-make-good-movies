@@ -5,6 +5,7 @@ import client from "../core/dynamodb";
 
 export class User extends Item {
   username: string;
+  
 
   constructor(username: string) {
     super();
