@@ -36,11 +36,22 @@ export class User extends Item {
 
 export const createUser = async (user: User): Promise<User> => {
   try {
-    await client.put({
-      TableName: process.env.BRMGM_TABLE_NAME!,
-      Item: user.toItem(),
-      ConditionExpression: "attribute_not_exists(PK)",
-    });
+    await Promise.all([
+      client.put({
+        TableName: process.env.BRMGM_TABLE_NAME!,
+        Item: user.toItem(),
+        ConditionExpression: "attribute_not_exists(PK)",
+      }),
+      client.put({
+        TableName: process.env.BRMGM_TABLE_NAME!,
+        Item: {
+          PK: `USER#${user.username}`,
+          SK: `WATCHLIST#${user.username}`,
+          username: user.username,
+        },
+        ConditionExpression: "attribute_not_exists(PK)",
+      }),
+    ]);
 
     return user;
   } catch (error) {

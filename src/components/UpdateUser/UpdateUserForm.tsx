@@ -28,19 +28,20 @@ export const UpdateUserForm = ({ username, wishlist }: UpdateUserFormProps) => {
           name="username"
           required
           placeholder={username}
-          value={username}
         />
       </label>
 
-      <label>
-        Wishlist
-        <textarea
-          id="wishlist"
-          name="wishlist"
-          required
-          placeholder={wishlist.join(", ")}
-        ></textarea>
-      </label>
+      {wishlist != null && wishlist.length > 0 && (
+        <label>
+          Wishlist
+          <textarea
+            id="wishlist"
+            name="wishlist"
+            required
+            placeholder={wishlist.join(", ")}
+          ></textarea>
+        </label>
+      )}
       <button type="submit">Send</button>
     </form>
   );
