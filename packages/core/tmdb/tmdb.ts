@@ -107,7 +107,6 @@ const configurationApi = {
 
 const bffEndpoints: BffEndpoints = {
   list: async (query: string) => {
-
     // [x]: search for movies
     // [x]: get the credits for each movie
     // [ ]: get the images for each movie?
