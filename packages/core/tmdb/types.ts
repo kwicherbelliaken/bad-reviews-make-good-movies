@@ -34,8 +34,8 @@ export type Movie = {
   poster_path: string;
   adult: boolean;
   overview: string;
-  release_date: Date;
-  genre_ids: number[];
+  release_date: string;
+  genre_ids: Array<number>;
   original_language: string;
   backdrop_path: string;
   popularity: number;
@@ -54,14 +54,14 @@ export type SearchResult<T> = {
 export type MovieDetails = Movie & {
   belongs_to_collection: Collection;
   budget: number;
-  genres: Genre[];
+  genres: Array<Genre>;
   homepage: string;
   imdb_id: string;
-  production_companies: Company[];
-  production_countries: Country[];
+  production_companies: Array<Company>;
+  production_countries: Array<Country>;
   revenue: number;
   runtime: number;
-  spoken_languages: Language[];
+  spoken_languages: Array<Language>;
   status: string;
   tagline: string;
 };
@@ -95,8 +95,8 @@ type Cast = BaseCrewOrCast & {
 
 export type MovieCredits = {
   id: number;
-  cast: Cast[];
-  crew: Crew[];
+  cast: Array<Cast>;
+  crew: Array<Crew>;
 };
 
 /* Configuration Schema 
@@ -107,22 +107,21 @@ export type ConfigurationDetails = {
   images: {
     base_url: string;
     secure_base_url: string;
-    backdrop_sizes: `w${string}` | "original"[];
-    logo_sizes: `w${string}` | "original"[];
-    poster_sizes: `w${string}` | "original"[];
-    profile_sizes: `w${string}` | `h${string}` | "original"[];
-    still_sizes: `w${string}` | "original"[];
+    backdrop_sizes: Array<`w${string}` | "original">;
+    logo_sizes: Array<`w${string}` | "original">;
+    poster_sizes: Array<`w${string}` | "original">;
+    profile_sizes: Array<`w${string}` | `h${string}` | "original">;
+    still_sizes: Array<`w${string}` | "original">;
   };
-  change_keys: string[];
+  change_keys: Array<string>;
 };
 
-export type BffListResponse = Pick<
-  Movie,
-  "title" | "release_date" | "overview" | "poster_path"
-> & {
-  cast: Pick<Cast, "name" | "character">[];
-};
+export type BffListResponse = Array<
+  Pick<Movie, "title" | "release_date" | "overview" | "poster_path"> & {
+    cast: Array<Pick<Cast, "name" | "character">>;
+  }
+>;
 
 export type BffEndpoints = {
-  list: (query: string) => Promise<BffListResponse[]>;
+  list: (query: string) => Promise<BffListResponse>;
 };
