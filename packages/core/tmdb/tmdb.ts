@@ -8,8 +8,6 @@ import type {
   SearchResult,
 } from "./types";
 
-// [ ]: I want the actors
-
 const movieApi = {
   details: async (movieId: string): Promise<MovieDetails> => {
     const response = await fetch(

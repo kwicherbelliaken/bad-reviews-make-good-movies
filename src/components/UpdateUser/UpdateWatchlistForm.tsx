@@ -1,5 +1,6 @@
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import debounce from "debounce";
+import { match } from "ts-pattern";
 import type { BffListResponse } from "../../../packages/core/tmdb/types";
 
 interface UpdateWatchlistFormProps {}
@@ -33,7 +34,15 @@ const searchMovies = async (query: string) => {
 
 const useSearchMovies = () => {
   const [value, setValue] = useState("");
-  const [movies, setMovies] = useState<BffListResponse | null>(null);
+
+  const [result, setResult] = useState<
+    | { status: "success"; data: BffListResponse }
+    | { status: "error"; error: Error }
+    | { status: "idle" }
+    | { status: "loading" }
+  >({
+    status: "idle",
+  });
 
   const handleOnChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
@@ -44,24 +53,29 @@ const useSearchMovies = () => {
   const debouncedSearch = useMemo(
     () =>
       debounce(async (query: string) => {
-        const results = await searchMovies(query);
+        // [ ]: use dev tools to return an error
+        setResult({ status: "loading" });
 
-        setMovies(results);
+        try {
+          const results = await searchMovies(query);
+
+          setResult({ status: "success", data: results });
+        } catch (error) {
+          setResult({ status: "error", error: error as unknown as Error });
+        }
       }, 500),
     []
   );
 
   return {
     value,
-    movies,
+    result: result,
     search: handleOnChange,
   };
 };
 
 export const UpdateWatchlistForm = ({}: UpdateWatchlistFormProps) => {
-  const { value, movies, search } = useSearchMovies();
-
-  // [ ]: implement loading state
+  const { value, result, search } = useSearchMovies();
 
   return (
     <>
@@ -69,25 +83,33 @@ export const UpdateWatchlistForm = ({}: UpdateWatchlistFormProps) => {
         <input type="text" value={value} onChange={search} />
       </div>
       <div>
-        {movies?.map((movie) => (
-          <div
-            key={movie.title}
-            className="flex flex-col bg-slate-50 p-6 gap-4 border border-l-stone-400 hover:bg-slate-400"
-          >
-            <div>{movie.title}</div>
-            <div>{movie.release_date}</div>
-            <div>{movie.overview}</div>
-            {movie.cast.map((cast) => {
-              return (
-                <div>
-                  <div>
-                    {cast.name} as {cast.character}
-                  </div>
+        {match(result)
+          .with({ status: "loading" }, () => <div>loading...</div>)
+          .with({ status: "success" }, ({ data: movies }) => (
+            <>
+              {movies?.map((movie) => (
+                <div
+                  key={movie.title}
+                  className="flex flex-col bg-slate-50 p-6 gap-4 border border-l-stone-400 hover:bg-slate-400"
+                >
+                  <div>{movie.title}</div>
+                  <div>{movie.release_date}</div>
+                  <div>{movie.overview}</div>
+                  {movie.cast.map((cast) => {
+                    return (
+                      <div>
+                        <div>
+                          {cast.name} as {cast.character}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-              );
-            })}
-          </div>
-        ))}
+              ))}
+            </>
+          ))
+          .with({ status: "error" }, ({ error }) => <div>{error.message}</div>)
+          .otherwise(() => null)}
       </div>
     </>
   );
