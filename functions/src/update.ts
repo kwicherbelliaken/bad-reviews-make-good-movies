@@ -1,6 +1,8 @@
 import { default as handlerWrapper } from "../../packages/core/handler";
 import dynamoDb from "../../packages/core/dynamodb";
 
+//! THIS WHOLE FILE NEEDS TO BE REFACTORED
+
 //! The typing is wonky. I need to attend to it.
 // @ts-ignore
 export const handler = handlerWrapper(async (event) => {

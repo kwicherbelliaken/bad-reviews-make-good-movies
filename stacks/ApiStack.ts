@@ -4,8 +4,6 @@ import { StorageStack } from "./StorageStack";
 export function ApiStack({ stack }: StackContext) {
   const brmgmDb = use(StorageStack);
 
-  // [ ]: perhaps declare this in another stack and import the StorageStack to it
-
   const api = new Api(stack, "api", {
     defaults: {
       function: {
@@ -22,9 +20,28 @@ export function ApiStack({ stack }: StackContext) {
     },
   });
 
+  // [ ]: get SST to manage these env vars
+  const accessToken = process.env.TMDB_API_READ_ACCESS_TOKEN;
+  const tmdbApiBaseUrl = process.env.TMDB_API_BASE_URL;
+
+  const tmdbApi = new Api(stack, "tmdbApi", {
+    defaults: {
+      function: {
+        environment: {
+          TMDB_API_BASE_URL: tmdbApiBaseUrl!,
+          TMDB_API_READ_ACCESS_TOKEN: accessToken!,
+        },
+      },
+    },
+    routes: {
+      "GET /search": "functions/tmdb/bff/list.handler",
+    },
+  });
+
   // Show the URLs in the output
   stack.addOutputs({
     ApiEndpoint: api.url,
+    tmdbApiEndpoint: tmdbApi.url,
   });
 
   return api;
