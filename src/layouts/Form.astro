@@ -1,5 +1,5 @@
 ---
-import { UpdateUserForm } from "../components/UpdateUser";
+import { UpdateUserForm, UpdateWatchlistForm } from "../components/UpdateUser";
 
 const response = await fetch(
   "https://hh2877m7a0.execute-api.ap-southeast-2.amazonaws.com/users/slackermorris",
@@ -13,4 +13,5 @@ const data = await response.json();
 const { username, wishlist } = data;
 ---
 
-<UpdateUserForm client:only username={username} wishlist={wishlist} />
+<!-- <UpdateUserForm client:only username={username} wishlist={wishlist} /> -->
+<UpdateWatchlistForm />
