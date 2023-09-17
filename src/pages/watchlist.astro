@@ -1,0 +1,15 @@
+---
+import Header from "../components/Header";
+import Layout from "../layouts/Layout.astro";
+import { UpdateWatchlistForm } from "../components/UpdateUser";
+---
+
+<Layout title="Welcome to Astro.">
+  <main class="m-auto">
+    <Header />
+    <div class="">
+      <h1 class="text-6xl">watchlist page</h1>
+      <UpdateWatchlistForm client:load />
+    </div>
+  </main>
+</Layout>

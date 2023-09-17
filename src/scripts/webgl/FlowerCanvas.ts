@@ -215,8 +215,6 @@ export class FlowerCanvas {
   }
 
   private handleClick(e: MouseEvent | TouchEvent) {
-    e.preventDefault();
-
     let clientX, clientY;
 
     if (e.type === "click") {

@@ -68,6 +68,9 @@ const StarMenu = () => {
           className="duration-500 ease-out opacity-100 transition-opacity group-hover:opacity-0"
           src="/star.png"
         />
+
+        {/* I NEED TO DO SOME SERIOUS REFACTORING HERE */}
+        <a href="/watchlist">add to watchlist</a>
       </div>
     </div>
   );
