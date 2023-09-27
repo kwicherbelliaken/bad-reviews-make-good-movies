@@ -108,6 +108,7 @@ const bffEndpoints: BffEndpoints = {
     // [x]: search for movies
     // [x]: get the credits for each movie
     // [ ]: get the images for each movie?
+
     const movies = await searchApi.movies(query);
 
     //! off of movies
@@ -119,12 +120,23 @@ const bffEndpoints: BffEndpoints = {
     //! off of credits
     // first two entries for cast
 
-    //! use Theos video on Promise.allSettled
+    // [ ] figure out how I can make this more performant
+
+    // [ ] use Theos video on Promise.allSettled
     const movieCredits = await Promise.all(
       movies.map(async (movie) => {
         const credits = await movieApi.credits(movie.id.toString());
+        const details = await movieApi.details(movie.id.toString());
 
         return credits;
+      })
+    );
+
+    const movieGenres = await Promise.all(
+      movies.map(async (movie) => {
+        const details = await movieApi.details(movie.id.toString());
+
+        return details.genres.map((genre) => genre.name);
       })
     );
 
@@ -137,6 +149,7 @@ const bffEndpoints: BffEndpoints = {
         name: cast.name,
         character: cast.character,
       })),
+      genres: movieGenres[index],
     }));
 
     return response;

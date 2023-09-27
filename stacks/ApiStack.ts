@@ -15,6 +15,7 @@ export function ApiStack({ stack }: StackContext) {
     },
     routes: {
       "POST /users": "functions/src/create.handler",
+      "POST /movies": "functions/src/create-movie.handler",
       "GET /users/{username}": "functions/src/get.handler",
       "PUT /users/{id}": "functions/src/update.handler",
     },
