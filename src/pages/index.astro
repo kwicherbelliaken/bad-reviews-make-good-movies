@@ -2,8 +2,7 @@
 import Header from "../components/Header";
 import StarMenu from "../components/StarMenu";
 import FlowerAnimation from "../components/FlowerAnimation";
-// import UpdateUserForm from "../components/UpdateUser/UpdateUserForm.astro";
-import Form from "../layouts/Form.astro";
+// import Form from "../layouts/Form.astro";
 import Layout from "../layouts/Layout.astro";
 ---
 
@@ -11,9 +10,9 @@ import Layout from "../layouts/Layout.astro";
   <main class="m-auto">
     <Header />
     <div class="">
-      <Form />
-      <!-- <StarMenu client:load />
-      <FlowerAnimation client:visible /> -->
+      <!-- <Form /> -->
+      <FlowerAnimation client:visible />
+      <StarMenu client:load />
     </div>
   </main>
 </Layout>

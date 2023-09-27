@@ -37,7 +37,7 @@ export class Watchlist extends Item {
   }
 
   get gsi1pk(): string {
-    return `USER#${this.username}#WATCHLIST${this.id}`;
+    return `USER#${this.username}#WATCHLIST#${this.id}`;
   }
 
   get gsi1sk(): string {

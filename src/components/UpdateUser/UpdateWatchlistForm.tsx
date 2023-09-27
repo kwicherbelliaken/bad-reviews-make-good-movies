@@ -5,14 +5,6 @@ import type { BffListResponse } from "../../../packages/core/tmdb/types";
 
 interface UpdateWatchlistFormProps {}
 
-// 1. notes for CONQA
-// 2. sailing notes
-// 3. plan runs in hamner
-// 4. plan run in taupo
-// 5. plan tramp
-// 6. plan cape brett tramp
-// 7. drive down to kaiokoura for tramp
-
 // [ ]: implement proper error handling
 const searchMovies = async (query: string) => {
   const queryParams = new URLSearchParams({
@@ -90,7 +82,7 @@ export const UpdateWatchlistForm = ({}: UpdateWatchlistFormProps) => {
               {movies?.map((movie) => (
                 <div
                   key={movie.title}
-                  className="flex flex-col bg-slate-50 p-6 gap-4 border border-l-stone-400 hover:bg-slate-400"
+                  className="flex flex-col bg-slate-50 p-6 gap-4 border border-l-stone-400 hover:bg-slate-400 cursor-pointer"
                 >
                   <div>{movie.title}</div>
                   <div>{movie.release_date}</div>
