@@ -8,7 +8,6 @@ import { nanoid } from "nanoid";
 // [ ]: add support for an 'updated date'
 // [ ]: write in a GSI1PK that extends to the user
 
-
 export class Watchlist extends Item {
   id: string;
   username: string;
@@ -44,21 +43,26 @@ export class Watchlist extends Item {
     return `WATCHLIST#${this.id}`;
   }
 
+  gsiKeys(): DynamoDB.DocumentClient.Key {
+    return {
+      GSI1PK: this.gsi1pk,
+      GSI1SK: this.gsi1sk,
+    };
+  }
+
   toItem(): Record<string, unknown> {
     return {
       ...this.keys(),
+      ...this.gsiKeys(),
       id: this.id,
-      gsi1pk: this.gsi1pk,
-      gsi1sk: this.gsi1sk,
       createdDate: this.createdDate,
     };
   }
 }
 
-
-
-
-export const createWatchlist = async (watchlist: Watchlist): Promise<Watchlist> => {
+export const createWatchlist = async (
+  watchlist: Watchlist
+): Promise<Watchlist> => {
   try {
     await client.put({
       TableName: process.env.BRMGM_TABLE_NAME!,
@@ -71,4 +75,4 @@ export const createWatchlist = async (watchlist: Watchlist): Promise<Watchlist> 
     console.log(error);
     throw error;
   }
-}
+};

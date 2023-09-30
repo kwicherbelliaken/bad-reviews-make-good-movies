@@ -17,4 +17,6 @@ export default {
     client.transactWrite(params).promise(),
   batchWrite: (params: AWS.DynamoDB.DocumentClient.BatchWriteItemInput) =>
     client.batchWrite(params).promise(),
+  scan: (params: AWS.DynamoDB.DocumentClient.ScanInput) =>
+    client.scan(params).promise(),
 };
