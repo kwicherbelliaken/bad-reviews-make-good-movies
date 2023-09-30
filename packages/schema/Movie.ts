@@ -5,20 +5,18 @@ import client from "../core/dynamodb";
 import { nanoid } from "nanoid";
 import type { BffListResponse } from "../core/tmdb/types";
 
-// [ ]: add support for a 'created date'
-// [ ]: add support for an 'updated date'
-// [ ]: write in a GSI1PK that extends to the user
+type MovieDetails = BffListResponse[0];
 
 export class Movie extends Item {
   id: string;
   username: string;
   watchlistId: string;
-  movieDetails: BffListResponse;
+  movieDetails: MovieDetails;
 
   constructor(
     username: string,
     watchlistId: string,
-    movieDetails: BffListResponse
+    movieDetails: MovieDetails
   ) {
     super();
     this.id = nanoid();
@@ -33,7 +31,7 @@ export class Movie extends Item {
     if (item.username == null) throw new Error("No username!");
     if (item.watchlistId == null) throw new Error("No watchlistId!");
 
-    return new Movie(item.username, item.watchlistId, {} as BffListResponse);
+    return new Movie(item.username, item.watchlistId, {} as MovieDetails);
   }
 
   get pk(): string {
@@ -63,15 +61,27 @@ export class Movie extends Item {
   }
 }
 
-// [ ] want to ensure that I can't add the same movie to the watchlist
-// [ ] want to ensure that I can search by genre
-
 export const createMovie = async (movie: Movie): Promise<Movie> => {
   try {
+    const existingMovieEntry = await client.scan({
+      TableName: process.env.BRMGM_TABLE_NAME!,
+      FilterExpression: "movieDetails.title = :title AND gsi1pk = :gsi1pk",
+      ExpressionAttributeValues: {
+        ":title": movie.movieDetails.title,
+        ":gsi1pk": movie.gsi1pk,
+      },
+      ProjectionExpression: "pk",
+    });
+
+    // [ ] figure out a better way to handle this validation
+    if (existingMovieEntry.Count !== 0) {
+      throw new Error(`The Movie ${movie.movieDetails.title} already exists!`);
+    }
+
     await client.put({
       TableName: process.env.BRMGM_TABLE_NAME!,
       Item: movie.toItem(),
-      ConditionExpression: "attribute_not_exists(PK)",
+      ConditionExpression: "attribute_not_exists(pk)",
     });
 
     return movie;
