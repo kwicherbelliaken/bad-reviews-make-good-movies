@@ -50,12 +50,18 @@ export class Movie extends Item {
     return `MOVIE#${this.id}`;
   }
 
+  gsiKeys(): DynamoDB.DocumentClient.Key {
+    return {
+      GSI1PK: this.gsi1pk,
+      GSI1SK: this.gsi1sk,
+    };
+  }
+
   toItem(): Record<string, unknown> {
     return {
       ...this.keys(),
+      ...this.gsiKeys(),
       id: this.id,
-      gsi1pk: this.gsi1pk,
-      gsi1sk: this.gsi1sk,
       movieDetails: this.movieDetails,
     };
   }
@@ -63,9 +69,11 @@ export class Movie extends Item {
 
 export const createMovie = async (movie: Movie): Promise<Movie> => {
   try {
-    const existingMovieEntry = await client.scan({
+    const existingMovieEntry = await client.query({
       TableName: process.env.BRMGM_TABLE_NAME!,
-      FilterExpression: "movieDetails.title = :title AND gsi1pk = :gsi1pk",
+      IndexName: "GSI1",
+      KeyConditionExpression: "GSI1PK = :gsi1pk",
+      FilterExpression: "movieDetails.title = :title",
       ExpressionAttributeValues: {
         ":title": movie.movieDetails.title,
         ":gsi1pk": movie.gsi1pk,
