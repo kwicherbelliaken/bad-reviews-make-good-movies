@@ -7,9 +7,14 @@ import { UpdateWatchlistForm } from "../components/UpdateUser";
 <Layout title="Welcome to Astro.">
   <main class="m-auto">
     <Header />
-    <div class="">
-      <h1 class="text-6xl">watchlist page</h1>
-      <UpdateWatchlistForm client:load />
+    <div class="flex gap-8 items-end h-[100vh] p-2">
+      <div class="bg-red-200 grow-[3] h-full">
+        <h1 class="text-6xl">watchlist page</h1>
+        <UpdateWatchlistForm client:load />
+      </div>
+      <div class="bg-blue-200 grow-[7] h-full">
+        <div>this is where we list a users' watchlist</div>
+      </div>
     </div>
   </main>
 </Layout>

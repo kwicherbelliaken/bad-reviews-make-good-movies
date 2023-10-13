@@ -1,5 +1,5 @@
 import type { DynamoDB } from "aws-sdk";
-import { Item } from "./Base";
+import { GSIItem } from "./Base";
 
 import client from "../core/dynamodb";
 import { nanoid } from "nanoid";
@@ -7,7 +7,7 @@ import type { BffListResponse } from "../core/tmdb/types";
 
 type MovieDetails = BffListResponse[0];
 
-export class Movie extends Item {
+export class Movie extends GSIItem {
   id: string;
   username: string;
   watchlistId: string;
@@ -22,7 +22,6 @@ export class Movie extends Item {
     this.id = nanoid();
     this.username = username;
     this.watchlistId = watchlistId;
-
     this.movieDetails = movieDetails;
   }
 
@@ -30,8 +29,9 @@ export class Movie extends Item {
     if (!item) throw new Error("No item!");
     if (item.username == null) throw new Error("No username!");
     if (item.watchlistId == null) throw new Error("No watchlistId!");
+    if (item.movieDetails == null) throw new Error("No movieDetails!");
 
-    return new Movie(item.username, item.watchlistId, {} as MovieDetails);
+    return new Movie(item.username, item.watchlistId, item.movieDetails);
   }
 
   get pk(): string {
@@ -50,18 +50,13 @@ export class Movie extends Item {
     return `MOVIE#${this.id}`;
   }
 
-  gsiKeys(): DynamoDB.DocumentClient.Key {
-    return {
-      GSI1PK: this.gsi1pk,
-      GSI1SK: this.gsi1sk,
-    };
-  }
-
   toItem(): Record<string, unknown> {
     return {
       ...this.keys(),
       ...this.gsiKeys(),
       id: this.id,
+      username: this.username,
+      watchlistId: this.watchlistId,
       movieDetails: this.movieDetails,
     };
   }
@@ -97,4 +92,10 @@ export const createMovie = async (movie: Movie): Promise<Movie> => {
     console.log(error);
     throw error;
   }
+};
+
+export const isMovie = (
+  item: DynamoDB.DocumentClient.AttributeMap
+): item is Movie => {
+  return item.PK.startsWith("MOVIE#");
 };
