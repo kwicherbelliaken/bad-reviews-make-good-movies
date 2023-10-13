@@ -2,6 +2,18 @@
 import Header from "../components/Header";
 import Layout from "../layouts/Layout.astro";
 import { UpdateWatchlistForm } from "../components/UpdateUser";
+
+const username = "trial-user";
+const watchlistId = "8JWw9ZPsUtkD-14h0Fnzs";
+
+const response = await fetch(
+  `https://hh2877m7a0.execute-api.ap-southeast-2.amazonaws.com/users/${username}/watchlist/${watchlistId}`,
+  {
+    method: "GET",
+  }
+);
+
+const results = await response.json();
 ---
 
 <Layout title="Welcome to Astro.">
@@ -13,7 +25,26 @@ import { UpdateWatchlistForm } from "../components/UpdateUser";
         <UpdateWatchlistForm client:load />
       </div>
       <div class="bg-blue-200 grow-[7] h-full">
-        <div>this is where we list a users' watchlist</div>
+        {
+          results.map((movie) => (
+            <div class="flex bg-yellow-200 p-14 gap-2">
+              <div class="w-48 h-48 bg-purple-300 self-center" />
+              <div class="flex flex-col gap-4">
+                <h1>
+                  {movie.movieDetails.title} {movie.movieDetails.release_date}
+                </h1>
+                <p>{movie.movieDetails.overview}</p>
+                {movie.movieDetails.cast.map((cast) => (
+                  <div>
+                    <div>
+                      {cast.name} as {cast.character}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))
+        }
       </div>
     </div>
   </main>
