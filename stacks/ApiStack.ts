@@ -17,6 +17,8 @@ export function ApiStack({ stack }: StackContext) {
       "POST /users": "functions/src/create.handler",
       "POST /movies": "functions/src/create-movie.handler",
       "GET /users/{username}": "functions/src/get.handler",
+      "GET /users/{username}/watchlist/{watchlistId}":
+        "functions/src/list-watchlist-movies.handler",
       "PUT /users/{id}": "functions/src/update.handler",
     },
   });

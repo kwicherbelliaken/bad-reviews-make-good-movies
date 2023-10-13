@@ -13,3 +13,15 @@ export abstract class Item {
 
   abstract toItem(): Record<string, unknown>;
 }
+
+export abstract class GSIItem extends Item {
+  abstract get gsi1pk(): string;
+  abstract get gsi1sk(): string;
+
+  public gsiKeys(): DynamoDB.DocumentClient.Key {
+    return {
+      GSI1PK: this.gsi1pk,
+      GSI1SK: this.gsi1sk,
+    };
+  }
+}

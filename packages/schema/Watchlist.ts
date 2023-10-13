@@ -1,21 +1,22 @@
 import type { DynamoDB } from "aws-sdk";
-import { Item } from "./Base";
+import { GSIItem } from "./Base";
 
 import client from "../core/dynamodb";
 import { nanoid } from "nanoid";
+import { Movie, isMovie } from "./Movie";
 
 // [ ]: add support for a 'created date'
 // [ ]: add support for an 'updated date'
 // [ ]: write in a GSI1PK that extends to the user
 
-export class Watchlist extends Item {
+export class Watchlist extends GSIItem {
   id: string;
   username: string;
   createdDate: string;
 
-  constructor(username: string) {
+  constructor(username: string, id?: string) {
     super();
-    this.id = nanoid();
+    this.id = id ?? nanoid();
     this.username = username;
     this.createdDate = new Date().toISOString();
   }
@@ -43,18 +44,12 @@ export class Watchlist extends Item {
     return `WATCHLIST#${this.id}`;
   }
 
-  gsiKeys(): DynamoDB.DocumentClient.Key {
-    return {
-      GSI1PK: this.gsi1pk,
-      GSI1SK: this.gsi1sk,
-    };
-  }
-
   toItem(): Record<string, unknown> {
     return {
       ...this.keys(),
       ...this.gsiKeys(),
       id: this.id,
+      username: this.username,
       createdDate: this.createdDate,
     };
   }
@@ -71,6 +66,34 @@ export const createWatchlist = async (
     });
 
     return watchlist;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const getWatchlistMovies = async (
+  watchlist: Watchlist
+): Promise<Movie[]> => {
+  try {
+    const result = await client.query({
+      TableName: process.env.BRMGM_TABLE_NAME!,
+      IndexName: "GSI1",
+      KeyConditionExpression: "GSI1PK = :gsi1pk",
+      ExpressionAttributeValues: {
+        ":gsi1pk": watchlist.gsi1pk,
+      },
+    });
+
+    if (result.Items == null || result.Count === 0) {
+      console.info(
+        `No movies were found for user ${watchlist.username} with watchlist ${watchlist.id}`
+      );
+
+      return [];
+    }
+
+    return result.Items.filter(isMovie).map((item) => Movie.fromItem(item));
   } catch (error) {
     console.log(error);
     throw error;
