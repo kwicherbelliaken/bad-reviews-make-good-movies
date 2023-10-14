@@ -66,6 +66,52 @@ const useSearchMovies = () => {
   };
 };
 
+const useAddMovieToWatchlist = () => {
+  const [result, setResult] = useState<
+    | { status: "success" }
+    | { status: "error"; error: Error }
+    | { status: "idle" }
+    | { status: "loading" }
+  >({
+    status: "idle",
+  });
+
+  const addMovieToWatchlist = async (payload: any) => {
+    setResult({ status: "loading" });
+
+    try {
+      const response = await fetch(
+        "https://hh2877m7a0.execute-api.ap-southeast-2.amazonaws.com/movies",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            username: "trial-user",
+            watchlistId: "8JWw9ZPsUtkD-14h0Fnzs",
+            payload,
+          }),
+        }
+      );
+
+      // NB: Critically important to actually read the response body. If we don't
+      // Node Fetch leaks connections: https://github.com/node-fetch/node-fetch/issues/499
+      const body = await response.json();
+
+      if (response.status !== 200 || !response.ok) {
+        throw new Error(body.error);
+      }
+
+      setResult({ status: "success" });
+    } catch (error) {
+      setResult({ status: "error", error: error as unknown as Error });
+    }
+  };
+
+  return {
+    result: result,
+    addMovieToWatchlist,
+  };
+};
+
 export const UpdateWatchlistForm = ({}: UpdateWatchlistFormProps) => {
   const { value, result, search } = useSearchMovies();
 
@@ -78,31 +124,90 @@ export const UpdateWatchlistForm = ({}: UpdateWatchlistFormProps) => {
         {match(result)
           .with({ status: "loading" }, () => <div>loading...</div>)
           .with({ status: "success" }, ({ data: movies }) => (
-            <>
-              {movies?.map((movie) => (
-                <div
-                  key={movie.title}
-                  className="flex flex-col bg-slate-50 p-6 gap-4 border border-l-stone-400 hover:bg-slate-400 cursor-pointer"
-                >
-                  <div>{movie.title}</div>
-                  <div>{movie.release_date}</div>
-                  <div>{movie.overview}</div>
-                  {movie.cast.map((cast) => {
-                    return (
-                      <div>
-                        <div>
-                          {cast.name} as {cast.character}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              ))}
-            </>
+            <Movies movies={movies} />
           ))
           .with({ status: "error" }, ({ error }) => <div>{error.message}</div>)
           .otherwise(() => null)}
       </div>
     </>
+  );
+};
+
+const Movie = ({
+  movie,
+  movies,
+}: {
+  movie: BffListResponse[0];
+  movies: BffListResponse;
+}) => {
+  const { result, addMovieToWatchlist } = useAddMovieToWatchlist();
+
+  const handleOnClick = async (event: React.MouseEvent<HTMLElement>) => {
+    const payload = movies.find(
+      (movie) => movie.title === event.currentTarget.id
+    );
+
+    if (payload == null) {
+      throw new Error(
+        "Weirdly, the movie you clicked on is not in the list of movies."
+      );
+    }
+
+    await addMovieToWatchlist(payload);
+  };
+
+  return (
+    <>
+      {match(result)
+        .with({ status: "loading" }, () => <div>loading...</div>)
+        .with({ status: "error" }, ({ error }) => (
+          <div id={movie.title} className="p-6" onClick={handleOnClick}>
+            <div className="text-white bg-red-400">{error.message}</div>
+            <div>{movie.title}</div>
+            <div>{movie.release_date}</div>
+            <div>{movie.overview}</div>
+            {movie.cast.map((cast) => {
+              return (
+                <div>
+                  <div>
+                    {cast.name} as {cast.character}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ))
+        .otherwise(() => (
+          <div id={movie.title} className="p-6" onClick={handleOnClick}>
+            <div>{movie.title}</div>
+            <div>{movie.release_date}</div>
+            <div>{movie.overview}</div>
+            {movie.cast.map((cast) => {
+              return (
+                <div>
+                  <div>
+                    {cast.name} as {cast.character}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ))}
+    </>
+  );
+};
+
+const Movies = ({ movies }: { movies: BffListResponse }) => {
+  return (
+    <div>
+      {movies?.map((movie, index) => (
+        <div
+          key={`${movie.title}-${index}`}
+          className="flex flex-col bg-slate-50 gap-4 border border-l-stone-400 hover:bg-slate-400 cursor-pointer"
+        >
+          <Movie movie={movie} movies={movies} />
+        </div>
+      ))}
+    </div>
   );
 };
