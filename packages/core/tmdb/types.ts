@@ -124,4 +124,5 @@ export type BffListResponse = Array<
 
 export type BffEndpoints = {
   list: (query: string) => Promise<BffListResponse>;
+  image: (fileSize: `w${string}`, posterPath: string) => Promise<unknown>;
 };

@@ -65,22 +65,24 @@ const searchApi = {
 
 const imageApi = {
   poster: async (
-    baseUrl: string,
-    fileSize: string,
+    fileSize: `w${string}`,
     posterPath: string
   ): Promise<unknown> => {
-    const response = await fetch(`${baseUrl}${fileSize}/${posterPath}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.TMDB_API_READ_ACCESS_TOKEN}`,
-      },
-    });
+    const {
+      images: { base_url: imageUrl, poster_sizes },
+    } = await configurationApi.details();
 
-    // [ ]: what do I get back?
-    const result = await response.json();
+    if (!poster_sizes.includes(fileSize)) {
+      throw new Error(
+        `Invalid file size ${fileSize}. Valid file sizes are: ${poster_sizes.join(
+          ", "
+        )}`
+      );
+    }
 
-    return result;
+    const posterUrl = `${imageUrl}/t/p/${fileSize}/${posterPath}`;
+
+    return posterUrl;
   },
 };
 
@@ -104,7 +106,7 @@ const configurationApi = {
 };
 
 const bffEndpoints: BffEndpoints = {
-  list: async (query: string) => {
+  list: async (query) => {
     // [x]: search for movies
     // [x]: get the credits for each movie
     // [ ]: get the images for each movie?
@@ -153,6 +155,11 @@ const bffEndpoints: BffEndpoints = {
     }));
 
     return response;
+  },
+  image: async (fileSize, posterPath) => {
+    const imageUrl = await imageApi.poster(fileSize, posterPath);
+
+    return imageUrl;
   },
 };
 
