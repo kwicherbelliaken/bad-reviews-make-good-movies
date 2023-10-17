@@ -2,6 +2,7 @@
 import Header from "../components/Header";
 import Layout from "../layouts/Layout.astro";
 import { UpdateWatchlistForm } from "../components/UpdateUser";
+import WatchlistMovies from "../components/Watchlist/WatchlistMovies.astro";
 
 const username = "trial-user";
 const watchlistId = "8JWw9ZPsUtkD-14h0Fnzs";
@@ -25,26 +26,7 @@ const results = await response.json();
         <UpdateWatchlistForm client:load />
       </div>
       <div class="bg-blue-200 grow-[7] h-full">
-        {
-          results.map((movie) => (
-            <div class="flex bg-yellow-200 p-14 gap-2">
-              <div class="w-48 h-48 bg-purple-300 self-center" />
-              <div class="flex flex-col gap-4">
-                <h1>
-                  {movie.movieDetails.title} {movie.movieDetails.release_date}
-                </h1>
-                <p>{movie.movieDetails.overview}</p>
-                {movie.movieDetails.cast.map((cast) => (
-                  <div>
-                    <div>
-                      {cast.name} as {cast.character}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))
-        }
+        {results.map((movie) => <WatchlistMovies movie={movie} />)}
       </div>
     </div>
   </main>
