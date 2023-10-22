@@ -1,0 +1,52 @@
+/* Inject manually as applyBaseStyle is set as false */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Commit-Mono-450-Regular";
+  src: url("/fonts/commit-mono-450-regular.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "Commit-Mono-70-Regular";
+  src: url("/fonts/commit-mono-700-regular.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "After-All-Bold";
+  src: url("/fonts/after-all-bold.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "After-All-Bold-Serif";
+  src: url("/fonts/after-all-bold-serif.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "After-All-Regular";
+  src: url("/fonts/after-all-regular.otf") format("opentype");
+  font-display: swap;
+}
+
+@layer base {
+  h1 {
+    @apply pb-6 text-2xl font-bold font-afterAllRegular tracking-wide md:text-6xl;
+  }
+
+  h2 {
+    @apply pb-6 text-xl font-bold font-afterAllRegular tracking-wide md:text-5xl;
+  }
+
+  h3 {
+    @apply pb-6 text-lg font-bold md:text-4xl;
+  }
+
+  h4 {
+    @apply pb-6 text-base font-bold md:text-3xl;
+  }
+
+  p {
+    @apply text-sm font-mono450Regular tracking-normal md:text-base;
+  }
+}
