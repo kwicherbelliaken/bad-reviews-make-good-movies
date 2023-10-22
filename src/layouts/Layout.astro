@@ -1,4 +1,6 @@
 ---
+import "../styles/base.css";
+
 export interface Props {
   title: string;
 }
@@ -39,15 +41,5 @@ const { title } = Astro.props;
   code {
     font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
       DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
-  }
-
-  @font-face {
-    font-family: "Commit-Mono-450-Regular";
-    src: url("/fonts/commit-mono-450-regular") format("otf");
-  }
-
-  @font-face {
-    font-family: "Commit-Mono-70-Regular";
-    src: url("/fonts/commit-mono-700-regular") format("otf");
   }
 </style>
