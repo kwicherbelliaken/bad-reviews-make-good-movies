@@ -436,7 +436,11 @@ const Movie = ({
           </div>
         ))
         .otherwise(() => (
-          <div id={movie.title} className="p-6" onClick={handleOnClick}>
+          <div
+            id={movie.title}
+            className="p-6 flex flex-col bg-slate-50 gap-4 border rounded-lg hover:bg-slate-400 cursor-pointer"
+            onClick={handleOnClick}
+          >
             <h2>{movie.title}</h2>
             <h4>{movie.release_date}</h4>
             <p>{movie.overview}</p>
@@ -457,14 +461,9 @@ const Movie = ({
 
 const Movies = ({ movies }: { movies: BffListResponse }) => {
   return (
-    <div>
+    <div className="flex flex-col gap-4 drop-shadow-md">
       {movies?.map((movie, index) => (
-        <div
-          key={`${movie.title}-${index}`}
-          className="flex flex-col bg-slate-50 gap-4 border border-l-stone-400 hover:bg-slate-400 cursor-pointer"
-        >
-          <Movie movie={movie} movies={movies} />
-        </div>
+        <Movie key={`${movie.title}-${index}`} movie={movie} movies={movies} />
       ))}
     </div>
   );

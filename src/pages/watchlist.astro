@@ -2,7 +2,7 @@
 import Header from "../components/Header";
 import Layout from "../layouts/Layout.astro";
 import { UpdateWatchlistForm } from "../components/UpdateUser";
-import WatchlistMovies from "../components/Watchlist/WatchlistMovies.astro";
+import WatchlistMovie from "../components/Watchlist/WatchlistMovie.astro";
 
 const username = "trial-user";
 const watchlistId = "8JWw9ZPsUtkD-14h0Fnzs";
@@ -21,12 +21,12 @@ const results = await response.json();
   <main class="m-auto">
     <Header />
     <div class="flex gap-8 items-end h-[100vh] p-2 overflow-auto">
-      <div class="bg-red-200 w-[30%] h-full p-4">
+      <div class="w-[30%] h-full p-4">
         <h1>Search</h1>
         <UpdateWatchlistForm client:load />
       </div>
       <div class="w-[70%] h-full">
-        {results.map((movie) => <WatchlistMovies movie={movie} />)}
+        {results.map((movie) => <WatchlistMovie movie={movie} />)}
       </div>
     </div>
   </main>
