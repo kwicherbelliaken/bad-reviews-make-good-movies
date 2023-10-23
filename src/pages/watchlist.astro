@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import Layout from "../layouts/Layout.astro";
 import { UpdateWatchlistForm } from "../components/UpdateUser";
 import WatchlistMovie from "../components/Watchlist/WatchlistMovie.astro";
+import WatchlistMovies from "../components/Watchlist/WatchlistMovies.astro";
 
 const username = "trial-user";
 const watchlistId = "8JWw9ZPsUtkD-14h0Fnzs";
@@ -25,9 +26,7 @@ const results = await response.json();
         <h1>Search</h1>
         <UpdateWatchlistForm client:load />
       </div>
-      <div class="w-[70%] h-full">
-        {results.map((movie) => <WatchlistMovie movie={movie} />)}
-      </div>
+      <WatchlistMovies movies={results} />
     </div>
   </main>
 </Layout>

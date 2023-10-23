@@ -14,50 +14,48 @@ const response = await fetch(
 const imageUrl = await response.json();
 ---
 
-<div>
-  <div class="flex bg-grey-50 justify-between gap-6">
-    <div class="flex justify-center w-[50%] p-4">
-      <figure
-        class="rounded-xl p-2 bg-gray-900/2.5 ring-1 ring-inset ring-gray-900/10 lg:rounded-2xl lg:p-4"
-      >
-        <img
-          class="rounded-md shadow-2xl ring-1 ring-gray-900/10"
-          src={imageUrl}
-        />
-      </figure>
-    </div>
-    <div class="flex-col w-[50%] p-4">
-      <h1>
-        {movie.movieDetails.title}
-      </h1>
+<div class="flex bg-grey-50 justify-between rounded-lg border">
+  <div class="flex justify-center w-[50%] p-4">
+    <figure
+      class="rounded-xl p-2 bg-gray-900/2.5 ring-1 ring-inset ring-gray-900/10 lg:rounded-2xl lg:p-4"
+    >
+      <img
+        class="rounded-md shadow-2xl ring-1 ring-gray-900/10"
+        src={imageUrl}
+      />
+    </figure>
+  </div>
+  <div class="flex-col w-[50%] p-4">
+    <h1>
+      {movie.movieDetails.title}
+    </h1>
 
-      <h2 class="font-afterAllBoldSerif font-bold text-2xl tracking-wide">
-        {movie.movieDetails.release_date}
-      </h2>
+    <h2 class="font-afterAllBoldSerif font-bold text-2xl tracking-wide">
+      {movie.movieDetails.release_date}
+    </h2>
 
-      <p class="indent-7">
-        {movie.movieDetails.overview}
-      </p>
+    <p class="indent-7">
+      {movie.movieDetails.overview}
+    </p>
 
-      <div class="py-10">
-        {
-          movie.movieDetails.cast.map((cast) => (
-            <p class="indent-7">
-              {cast.name} as {cast.character}
-            </p>
-          ))
-        }
-      </div>
-
+    <div class="py-10">
       {
-        movie.movieDetails.genres.length > 0 && (
-          <div class="border-t-[1px] border-b-[1px] border-black flex flex-row gap-4 justify-center py-6">
-            {movie.movieDetails.genres.map((genre: string) => (
-              <p class="">{genre}</p>
-            ))}
-          </div>
-        )
+        movie.movieDetails.cast.map((cast) => (
+          <p class="indent-7">
+            {cast.name} as {cast.character}
+          </p>
+        ))
       }
     </div>
+
+    {
+      movie.movieDetails.genres.length > 0 && (
+        <div class="border-t-[1px] border-b-[1px] border-black flex flex-row gap-4 justify-center py-6">
+          {movie.movieDetails.genres.map((genre: string) => (
+            <p class="">{genre}</p>
+          ))}
+        </div>
+      )
+    }
   </div>
 </div>

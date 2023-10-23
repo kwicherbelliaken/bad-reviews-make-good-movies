@@ -1,0 +1,9 @@
+---
+import WatchlistMovie from "./WatchlistMovie.astro";
+
+const { movies } = Astro.props;
+---
+
+<div class="flex flex-col w-[70%] h-full gap-4">
+  {movies.map((movie) => <WatchlistMovie movie={movie} />)}
+</div>
