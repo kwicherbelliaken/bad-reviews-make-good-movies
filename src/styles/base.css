@@ -39,11 +39,11 @@
   }
 
   h3 {
-    @apply pb-6 text-lg font-bold md:text-4xl;
+    @apply pb-6 text-lg font-afterAllRegular font-bold md:text-4xl;
   }
 
   h4 {
-    @apply pb-6 text-base font-bold md:text-3xl;
+    @apply pb-6 text-base font-afterAllRegular font-bold md:text-3xl;
   }
 
   p {
