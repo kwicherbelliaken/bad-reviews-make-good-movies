@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import debounce from "debounce";
 import { match } from "ts-pattern";
 import type { BffListResponse } from "../../../packages/core/tmdb/types";
+import { Casette } from "./VHSCasette/Casette";
 
 interface SearchMoviesProps {}
 
@@ -130,14 +131,12 @@ export const SearchMovies = ({}: SearchMoviesProps) => {
           .with({ status: "loading" }, () => (
             <div className="h-full w-full text-center relative overflow-hidden">
               <div className="absolute top-[50%] left-[50%] -translate-y-1/2 -translate-x-1/2">
-                <LoadingSpinner />
+                <Casette />
               </div>
               <div className="h-full animate-ping bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-rose-100 to-teal-100" />
             </div>
           ))
-          .with({ status: "success" }, ({ data: movies }) => (
-            <Movies movies={movies} />
-          ))
+          .with({ status: "success" }, ({ data }) => <Movies movies={data} />)
           .with({ status: "error" }, ({ error }) => <div>{error.message}</div>)
           .otherwise(() => null)}
       </>
@@ -190,22 +189,25 @@ const Movie = ({
           </div>
         ))
         .otherwise(() => (
-          <div
-            id={movie.title}
-            className="p-6 flex flex-col bg-slate-50 gap-4 border rounded-lg hover:bg-slate-400 cursor-pointer"
-            onClick={handleOnClick}
-          >
-            <h2>{movie.title}</h2>
-            <h4>{movie.release_date}</h4>
-            <p>{movie.overview}</p>
-            <div className="flex flex-col py-10 gap-2">
-              {movie.cast.map((cast) => {
-                return (
-                  <p>
-                    <strong>{cast.name}</strong> as {cast.character}
-                  </p>
-                );
-              })}
+          <div className="p-6 bg-slate-50 border rounded-lg hover:bg-slate-400 cursor-pointer">
+            {/* REMOVE THE NESTING FLEX BOXES HERE */}
+            <div
+              id={movie.title}
+              className="flex flex-col"
+              onClick={handleOnClick}
+            >
+              <h2>{movie.title}</h2>
+              <h4>{movie.release_date}</h4>
+              <p>{movie.overview}</p>
+              <div className="flex flex-col py-10 gap-2">
+                {movie.cast.map((cast) => {
+                  return (
+                    <p>
+                      <strong>{cast.name}</strong> as {cast.character}
+                    </p>
+                  );
+                })}
+              </div>
             </div>
           </div>
         ))}
