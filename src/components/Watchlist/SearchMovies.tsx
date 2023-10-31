@@ -4,6 +4,33 @@ import { match } from "ts-pattern";
 import type { BffListResponse } from "../../../packages/core/tmdb/types";
 import { Casette } from "./VHSCasette/Casette";
 
+const mockPayload = [
+  {
+    title: "Bee Movie",
+    release_date: "2007-10-28",
+    overview:
+      "Barry B. Benson, a bee who has just graduated from college, is disillusioned at his lone career choice: making honey. On a special trip outside the hive, Barry's life is saved by Vanessa, a florist in New York City. As their relationship blossoms, he discovers humans actually eat honey, and subsequently decides to sue us.",
+    poster_path: "/1xlHV0AMoXQAOPAZXLQgq39tRCJ.jpg",
+    cast: [
+      { name: "Jerry Seinfeld", character: "Barry B. Benson (voice)" },
+      { name: "Renée Zellweger", character: "Vanessa Bloome (voice)" },
+    ],
+    genres: ["Family", "Animation", "Adventure", "Comedy"],
+  },
+  {
+    title: "Maya the Bee Movie",
+    release_date: "2014-09-11",
+    overview:
+      "Freshly hatched bee Maya is a little whirlwind and won't follow the rules of the hive. One of these rules is not to trust the hornets that live beyond the meadow. When the Royal Jelly is stolen, the hornets are suspected and Maya is thought to be their accomplice. No one believes that she is the innocent victim and no one will stand by her except for her good-natured and best friend Willy. After a long and eventful journey to the hornets hive Maya and Willy soon discover the true culprit and the two friends finally bond with the other residents of the opulent meadow.",
+    poster_path: "/pMQ88CvnQroSjxk4IhM7YNbcjTx.jpg",
+    cast: [
+      { name: "Coco Jack Gillies", character: "Maya (voice)" },
+      { name: "Kodi Smit-McPhee", character: "Willy (voice)" },
+    ],
+    genres: ["Family", "Animation"],
+  },
+];
+
 interface SearchMoviesProps {}
 
 // [ ]: implement proper error handling
@@ -128,6 +155,9 @@ export const SearchMovies = ({}: SearchMoviesProps) => {
       </div>
       <>
         {match(result)
+          .with({ status: "idle" }, ({ data }) => (
+            <Movies movies={mockPayload} />
+          ))
           .with({ status: "loading" }, () => (
             <div className="h-full w-full text-center relative overflow-hidden">
               <div className="absolute top-[50%] left-[50%] -translate-y-1/2 -translate-x-1/2">
@@ -190,23 +220,32 @@ const Movie = ({
         ))
         .otherwise(() => (
           <div className="p-6 bg-slate-50 border rounded-lg hover:bg-slate-400 cursor-pointer">
-            {/* REMOVE THE NESTING FLEX BOXES HERE */}
-            <div
-              id={movie.title}
-              className="flex flex-col"
-              onClick={handleOnClick}
-            >
-              <h2>{movie.title}</h2>
-              <h4>{movie.release_date}</h4>
-              <p>{movie.overview}</p>
-              <div className="flex flex-col py-10 gap-2">
-                {movie.cast.map((cast) => {
-                  return (
-                    <p>
-                      <strong>{cast.name}</strong> as {cast.character}
-                    </p>
-                  );
-                })}
+            <div className="flex flex-row">
+              <div
+                id={movie.title}
+                className="flex flex-col"
+                onClick={handleOnClick}
+              >
+                <h2>{movie.title}</h2>
+                <h4>{movie.release_date}</h4>
+                <p>{movie.overview}</p>
+                <div className="flex flex-col py-10 gap-2">
+                  {movie.cast.map((cast) => {
+                    return (
+                      <p>
+                        <strong>{cast.name}</strong> as {cast.character}
+                      </p>
+                    );
+                  })}
+                </div>
+              </div>
+              <div
+                className="absolute right-0 top-0 p-6 flex gap-4"
+                onClick={handleOnClick}
+              >
+                <span className="text-4xl hover:text-5xl" role="img" aria-label="eyes">
+                  👀
+                </span>
               </div>
             </div>
           </div>
