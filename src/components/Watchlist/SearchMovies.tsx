@@ -163,10 +163,58 @@ export const SearchMovies = ({}: SearchMoviesProps) => {
               <div className="h-full animate-ping bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-rose-100 to-teal-100" />
             </div>
           ))
-          .with({ status: "success" }, ({ data }) => <Movies movies={data} />)
+          .with({ status: "idle" }, ({ data }) => (
+            <Movies movies={mockPayload} />
+          ))
           .with({ status: "error" }, ({ error }) => <div>{error.message}</div>)
           .otherwise(() => null)}
       </>
+    </div>
+  );
+};
+
+//? the movie content should remain unchanged whether we click on something or not
+//? MovieDetails
+//? Buttons
+//? if it has children then it cannot be memoised
+
+const MovieContent = ({
+  movie,
+  children,
+  onClick,
+}: React.PropsWithChildren<{
+  movie: BffListResponse[0];
+  onClick: (event: React.MouseEvent<HTMLElement>) => void;
+}>) => {
+  return (
+    <div className="p-6 bg-slate-50 border rounded-lg">
+      <div className="flex flex-row relative">
+        <div id={movie.title} className="flex flex-col">
+          <div className="flex flex-row justify-between">
+            <h2>{movie.title}</h2>
+
+            <div
+              id={movie.title}
+              className="absolute right-0 top-0 flex gap-4"
+              onClick={onClick}
+            >
+              {children}
+            </div>
+          </div>
+
+          <h4>{movie.release_date}</h4>
+          <p>{movie.overview}</p>
+          <div className="flex flex-col py-10 gap-2">
+            {movie.cast.map((cast) => {
+              return (
+                <p>
+                  <strong>{cast.name}</strong> as {cast.character}
+                </p>
+              );
+            })}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
@@ -181,13 +229,6 @@ const Movie = ({
   const { result, addMovieToWatchlist } = useAddMovieToWatchlist();
 
   const handleOnClick = async (event: React.MouseEvent<HTMLElement>) => {
-    console.log(
-      "🚀 ~ file: SearchMovies.tsx:184 ~ handleOnClick ~ event:",
-
-      {
-        id: event.currentTarget.id,
-      }
-    );
     const payload = movies.find(
       (movie) => movie.title === event.currentTarget.id
     );
@@ -206,9 +247,13 @@ const Movie = ({
   return (
     <>
       {match(result)
-        .with({ status: "loading" }, () => <div>loading...</div>)
+        .with({ status: "loading" }, () => (
+          <MovieContent movie={movie} onClick={handleOnClick}>
+            <LoadingSpinner />
+          </MovieContent>
+        ))
         .with({ status: "error" }, ({ error }) => (
-          <div id={movie.title} className="p-6" onClick={handleOnClick}>
+          <div id={movie.title} className="p-6">
             <div>{error.message}</div>
             <div>{movie.title}</div>
             <div>{movie.release_date}</div>
@@ -225,41 +270,21 @@ const Movie = ({
           </div>
         ))
         .otherwise(() => (
-          <div className="p-6 bg-slate-50 border rounded-lg">
-            <div className="flex flex-row relative">
-              <div id={movie.title} className="flex flex-col">
-                <div className="flex flex-row justify-between">
-                  <h2>{movie.title}</h2>
-
-                  <div
-                    id={movie.title}
-                    className="absolute right-0 top-0 flex gap-4"
-                    onClick={handleOnClick}
-                  >
-                    <span
-                      className="text-4xl cursor-pointer before:content-[' '] before:hover:shadow-[18px_0_40px_20px_#defe56]"
-                      role="img"
-                      aria-label="eyes"
-                    >
-                      👀
-                    </span>
-                  </div>
-                </div>
-
-                <h4>{movie.release_date}</h4>
-                <p>{movie.overview}</p>
-                <div className="flex flex-col py-10 gap-2">
-                  {movie.cast.map((cast) => {
-                    return (
-                      <p>
-                        <strong>{cast.name}</strong> as {cast.character}
-                      </p>
-                    );
-                  })}
-                </div>
-              </div>
+          <MovieContent movie={movie} onClick={handleOnClick}>
+            <div
+              id={movie.title}
+              className="absolute right-0 top-0 flex gap-4"
+              onClick={handleOnClick}
+            >
+              <span
+                className="text-4xl cursor-pointer before:content-[' '] before:hover:shadow-[18px_0_40px_20px_#defe56]"
+                role="img"
+                aria-label="eyes"
+              >
+                👀
+              </span>
             </div>
-          </div>
+          </MovieContent>
         ))}
     </>
   );
