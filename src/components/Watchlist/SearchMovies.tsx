@@ -155,9 +155,6 @@ export const SearchMovies = ({}: SearchMoviesProps) => {
       </div>
       <>
         {match(result)
-          .with({ status: "idle" }, ({ data }) => (
-            <Movies movies={mockPayload} />
-          ))
           .with({ status: "loading" }, () => (
             <div className="h-full w-full text-center relative overflow-hidden">
               <div className="absolute top-[50%] left-[50%] -translate-y-1/2 -translate-x-1/2">
@@ -219,13 +216,9 @@ const Movie = ({
           </div>
         ))
         .otherwise(() => (
-          <div className="p-6 bg-slate-50 border rounded-lg hover:bg-slate-400 cursor-pointer">
+          <div className="p-6 bg-slate-50 border rounded-lg">
             <div className="flex flex-row">
-              <div
-                id={movie.title}
-                className="flex flex-col"
-                onClick={handleOnClick}
-              >
+              <div id={movie.title} className="flex flex-col">
                 <h2>{movie.title}</h2>
                 <h4>{movie.release_date}</h4>
                 <p>{movie.overview}</p>
@@ -239,11 +232,16 @@ const Movie = ({
                   })}
                 </div>
               </div>
+
               <div
                 className="absolute right-0 top-0 p-6 flex gap-4"
                 onClick={handleOnClick}
               >
-                <span className="text-4xl hover:text-5xl" role="img" aria-label="eyes">
+                <span
+                  className="text-4xl cursor-pointer before:content-[' '] before:hover:shadow-[18px_0_40px_20px_#defe56]"
+                  role="img"
+                  aria-label="eyes"
+                >
                   👀
                 </span>
               </div>
