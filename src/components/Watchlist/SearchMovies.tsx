@@ -181,6 +181,13 @@ const Movie = ({
   const { result, addMovieToWatchlist } = useAddMovieToWatchlist();
 
   const handleOnClick = async (event: React.MouseEvent<HTMLElement>) => {
+    console.log(
+      "🚀 ~ file: SearchMovies.tsx:184 ~ handleOnClick ~ event:",
+
+      {
+        id: event.currentTarget.id,
+      }
+    );
     const payload = movies.find(
       (movie) => movie.title === event.currentTarget.id
     );
@@ -190,6 +197,8 @@ const Movie = ({
         "Weirdly, the movie you clicked on is not in the list of movies."
       );
     }
+
+    // [ ] I need proper error handling in the event that the movie is already on the watchlist
 
     await addMovieToWatchlist(payload);
   };
@@ -217,9 +226,26 @@ const Movie = ({
         ))
         .otherwise(() => (
           <div className="p-6 bg-slate-50 border rounded-lg">
-            <div className="flex flex-row">
+            <div className="flex flex-row relative">
               <div id={movie.title} className="flex flex-col">
-                <h2>{movie.title}</h2>
+                <div className="flex flex-row justify-between">
+                  <h2>{movie.title}</h2>
+
+                  <div
+                    id={movie.title}
+                    className="absolute right-0 top-0 flex gap-4"
+                    onClick={handleOnClick}
+                  >
+                    <span
+                      className="text-4xl cursor-pointer before:content-[' '] before:hover:shadow-[18px_0_40px_20px_#defe56]"
+                      role="img"
+                      aria-label="eyes"
+                    >
+                      👀
+                    </span>
+                  </div>
+                </div>
+
                 <h4>{movie.release_date}</h4>
                 <p>{movie.overview}</p>
                 <div className="flex flex-col py-10 gap-2">
@@ -231,19 +257,6 @@ const Movie = ({
                     );
                   })}
                 </div>
-              </div>
-
-              <div
-                className="absolute right-0 top-0 p-6 flex gap-4"
-                onClick={handleOnClick}
-              >
-                <span
-                  className="text-4xl cursor-pointer before:content-[' '] before:hover:shadow-[18px_0_40px_20px_#defe56]"
-                  role="img"
-                  aria-label="eyes"
-                >
-                  👀
-                </span>
               </div>
             </div>
           </div>
