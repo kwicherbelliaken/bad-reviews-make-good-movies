@@ -163,20 +163,12 @@ export const SearchMovies = ({}: SearchMoviesProps) => {
               <div className="h-full animate-ping bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-rose-100 to-teal-100" />
             </div>
           ))
-          .with({ status: "idle" }, ({ data }) => (
-            <Movies movies={mockPayload} />
-          ))
           .with({ status: "error" }, ({ error }) => <div>{error.message}</div>)
           .otherwise(() => null)}
       </>
     </div>
   );
 };
-
-//? the movie content should remain unchanged whether we click on something or not
-//? MovieDetails
-//? Buttons
-//? if it has children then it cannot be memoised
 
 const MovieContent = ({
   movie,
@@ -253,37 +245,26 @@ const Movie = ({
           </MovieContent>
         ))
         .with({ status: "error" }, ({ error }) => (
-          <div id={movie.title} className="p-6">
-            <div>{error.message}</div>
-            <div>{movie.title}</div>
-            <div>{movie.release_date}</div>
-            <div>{movie.overview}</div>
-            {movie.cast.map((cast) => {
-              return (
-                <div>
-                  <div>
-                    {cast.name} as {cast.character}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          <MovieContent movie={movie} onClick={handleOnClick}>
+            <span
+              className="text-4xl cursor-pointer before:content-[' '] before:hover:shadow-[18px_0_40px_20px_#E65438] after:content-[attr(data-hover)] after:opacity-0 after:bg-red-400 after:bg-opacity-30 after:outline after:outline-red-500 after:rounded-lg after:p-1 after:px-2 hover:after:visible hover:after:opacity-100 after:text-sm after:whitespace-nowrap after:text-white after:transition-opacity after:duration-750 after:ease-in-out after:delay-75 after:invisible after:absolute after:top-8"
+              data-hover={error.message}
+              role="img"
+              aria-label="eyes"
+            >
+              🥹
+            </span>
+          </MovieContent>
         ))
         .otherwise(() => (
           <MovieContent movie={movie} onClick={handleOnClick}>
-            <div
-              id={movie.title}
-              className="absolute right-0 top-0 flex gap-4"
-              onClick={handleOnClick}
+            <span
+              className="text-4xl cursor-pointer before:content-[' '] before:hover:shadow-[18px_0_40px_20px_#defe56]"
+              role="img"
+              aria-label="eyes"
             >
-              <span
-                className="text-4xl cursor-pointer before:content-[' '] before:hover:shadow-[18px_0_40px_20px_#defe56]"
-                role="img"
-                aria-label="eyes"
-              >
-                👀
-              </span>
-            </div>
+              👀
+            </span>
           </MovieContent>
         ))}
     </>
