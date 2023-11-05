@@ -4,28 +4,31 @@ import { StorageStack } from "./StorageStack";
 export function ApiStack({ stack }: StackContext) {
   const brmgmDb = use(StorageStack);
 
+  // [ ]: get SST to manage these env vars
+  const accessToken = process.env.TMDB_API_READ_ACCESS_TOKEN;
+  const tmdbApiBaseUrl = process.env.TMDB_API_BASE_URL;
+
   const api = new Api(stack, "api", {
     defaults: {
       function: {
         permissions: [brmgmDb],
         environment: {
           BRMGM_TABLE_NAME: brmgmDb.tableName,
+          TMDB_API_BASE_URL: tmdbApiBaseUrl!,
+          TMDB_API_READ_ACCESS_TOKEN: accessToken!,
         },
       },
     },
     routes: {
       "POST /users": "functions/src/create.handler",
       "POST /movies": "functions/src/create-movie.handler",
+      "GET /movies": "functions/src/list-movies.handler",
       "GET /users/{username}": "functions/src/get.handler",
       "GET /users/{username}/watchlist/{watchlistId}":
         "functions/src/list-watchlist-movies.handler",
       "PUT /users/{id}": "functions/src/update.handler",
     },
   });
-
-  // [ ]: get SST to manage these env vars
-  const accessToken = process.env.TMDB_API_READ_ACCESS_TOKEN;
-  const tmdbApiBaseUrl = process.env.TMDB_API_BASE_URL;
 
   const tmdbApi = new Api(stack, "tmdbApi", {
     defaults: {
