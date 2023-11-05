@@ -36,11 +36,11 @@ interface SearchMoviesProps {}
 // [ ]: implement proper error handling
 const searchMovies = async (query: string) => {
   const queryParams = new URLSearchParams({
-    query,
+    title: query,
   });
 
   const response = await fetch(
-    "https://dz76rj93fd.execute-api.ap-southeast-2.amazonaws.com/search?" +
+    "https://hh2877m7a0.execute-api.ap-southeast-2.amazonaws.com/movies?" +
       queryParams,
     {
       method: "GET",
@@ -171,6 +171,47 @@ export const SearchMovies = ({}: SearchMoviesProps) => {
   );
 };
 
+const MovieContent = ({
+  movie,
+  children,
+  onClick,
+}: React.PropsWithChildren<{
+  movie: BffListResponse[0];
+  onClick: (event: React.MouseEvent<HTMLElement>) => void;
+}>) => {
+  return (
+    <div className="p-6 bg-slate-50 border rounded-lg">
+      <div className="flex flex-row relative">
+        <div id={movie.title} className="flex flex-col">
+          <div className="flex flex-row justify-between">
+            <h2>{movie.title}</h2>
+
+            <div
+              id={movie.title}
+              className="absolute right-0 top-0 flex gap-4"
+              onClick={onClick}
+            >
+              {children}
+            </div>
+          </div>
+
+          <h4>{movie.release_date}</h4>
+          <p>{movie.overview}</p>
+          <div className="flex flex-col py-10 gap-2">
+            {movie.cast.map((cast) => {
+              return (
+                <p>
+                  <strong>{cast.name}</strong> as {cast.character}
+                </p>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Movie = ({
   movie,
   movies,
@@ -181,13 +222,6 @@ const Movie = ({
   const { result, addMovieToWatchlist } = useAddMovieToWatchlist();
 
   const handleOnClick = async (event: React.MouseEvent<HTMLElement>) => {
-    console.log(
-      "🚀 ~ file: SearchMovies.tsx:184 ~ handleOnClick ~ event:",
-
-      {
-        id: event.currentTarget.id,
-      }
-    );
     const payload = movies.find(
       (movie) => movie.title === event.currentTarget.id
     );
@@ -206,60 +240,33 @@ const Movie = ({
   return (
     <>
       {match(result)
-        .with({ status: "loading" }, () => <div>loading...</div>)
+        .with({ status: "loading" }, () => (
+          <MovieContent movie={movie} onClick={handleOnClick}>
+            <LoadingSpinner />
+          </MovieContent>
+        ))
         .with({ status: "error" }, ({ error }) => (
-          <div id={movie.title} className="p-6" onClick={handleOnClick}>
-            <div>{error.message}</div>
-            <div>{movie.title}</div>
-            <div>{movie.release_date}</div>
-            <div>{movie.overview}</div>
-            {movie.cast.map((cast) => {
-              return (
-                <div>
-                  <div>
-                    {cast.name} as {cast.character}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          <MovieContent movie={movie} onClick={handleOnClick}>
+            <span
+              className="text-4xl cursor-pointer before:content-[' '] before:hover:shadow-[18px_0_40px_20px_#E65438] after:content-[attr(data-hover)] after:opacity-0 after:bg-red-400 after:bg-opacity-30 after:outline after:outline-red-500 after:rounded-lg after:p-1 after:px-2 hover:after:visible hover:after:opacity-100 after:text-sm after:whitespace-nowrap after:text-white after:transition-opacity after:duration-750 after:ease-in-out after:delay-75 after:invisible after:absolute after:top-8"
+              data-hover={error.message}
+              role="img"
+              aria-label="eyes"
+            >
+              🥹
+            </span>
+          </MovieContent>
         ))
         .otherwise(() => (
-          <div className="p-6 bg-slate-50 border rounded-lg">
-            <div className="flex flex-row relative">
-              <div id={movie.title} className="flex flex-col">
-                <div className="flex flex-row justify-between">
-                  <h2>{movie.title}</h2>
-
-                  <div
-                    id={movie.title}
-                    className="absolute right-0 top-0 flex gap-4"
-                    onClick={handleOnClick}
-                  >
-                    <span
-                      className="text-4xl cursor-pointer before:content-[' '] before:hover:shadow-[18px_0_40px_20px_#defe56]"
-                      role="img"
-                      aria-label="eyes"
-                    >
-                      👀
-                    </span>
-                  </div>
-                </div>
-
-                <h4>{movie.release_date}</h4>
-                <p>{movie.overview}</p>
-                <div className="flex flex-col py-10 gap-2">
-                  {movie.cast.map((cast) => {
-                    return (
-                      <p>
-                        <strong>{cast.name}</strong> as {cast.character}
-                      </p>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          </div>
+          <MovieContent movie={movie} onClick={handleOnClick}>
+            <span
+              className="text-4xl cursor-pointer before:content-[' '] before:hover:shadow-[18px_0_40px_20px_#defe56]"
+              role="img"
+              aria-label="eyes"
+            >
+              👀
+            </span>
+          </MovieContent>
         ))}
     </>
   );

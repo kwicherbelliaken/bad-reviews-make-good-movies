@@ -99,3 +99,35 @@ export const getWatchlistMovies = async (
     throw error;
   }
 };
+
+export const findMovieInWatchlist = async (
+  movieTitle: string,
+  watchlist: Watchlist
+) => {
+
+  try {
+    const result = await client.query({
+      TableName: process.env.BRMGM_TABLE_NAME!,
+      IndexName: "GSI1",
+      KeyConditionExpression: "GSI1PK = :gsi1pk",
+      FilterExpression: "movieDetails.title = :title",
+      ExpressionAttributeValues: {
+        ":gsi1pk": watchlist.gsi1pk,
+        ":title": movieTitle,
+      },
+    });
+
+    if (result.Items == null || result.Count === 0) {
+      console.info(
+        `No movie titled ${movieTitle} was found for user ${watchlist.username} with watchlist ${watchlist.id}`
+      );
+
+      return [];
+    }
+
+    return result.Items.filter(isMovie).map((item) => Movie.fromItem(item));
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
