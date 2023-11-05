@@ -36,11 +36,11 @@ interface SearchMoviesProps {}
 // [ ]: implement proper error handling
 const searchMovies = async (query: string) => {
   const queryParams = new URLSearchParams({
-    query,
+    title: query,
   });
 
   const response = await fetch(
-    "https://dz76rj93fd.execute-api.ap-southeast-2.amazonaws.com/search?" +
+    "https://hh2877m7a0.execute-api.ap-southeast-2.amazonaws.com/movies?" +
       queryParams,
     {
       method: "GET",
@@ -163,6 +163,7 @@ export const SearchMovies = ({}: SearchMoviesProps) => {
               <div className="h-full animate-ping bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-rose-100 to-teal-100" />
             </div>
           ))
+          .with({ status: "success" }, ({ data }) => <Movies movies={data} />)
           .with({ status: "error" }, ({ error }) => <div>{error.message}</div>)
           .otherwise(() => null)}
       </>
