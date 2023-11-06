@@ -16,6 +16,9 @@ const StarMenu = () => {
         "star-animation-static",
         "star-animation",
         "star-animation-touchzone",
+        "three-dimensional-star",
+        "watchlist-page",
+        "watchlist-page-text",
       ];
 
       let startTime = new Date();
@@ -29,6 +32,7 @@ const StarMenu = () => {
       };
 
       const isMouseOffAnimation = (event: MouseEvent) => {
+        // [ ] consider the possibility of searching for the id as a child of one of the specified elements
         return !idsToCheck.includes((event.target as HTMLElement).id);
       };
 
@@ -58,19 +62,26 @@ const StarMenu = () => {
       className="absolute right-0 overflow-visible w-full h-full z-10 bg-transparent group"
     >
       <div
-        className={`absolute z-10 w-16 right-0 top-0 m-8 cursor-pointer group transition-[right,top] ease-in-out duration-1000 group-hover:top-1/2 group-hover:right-1/2`}
+        className={`flex flex-col align-middle absolute z-10 w-16 right-0 top-0 m-8 cursor-pointer group transition-[right,top] ease-in-out duration-1000 group-hover:top-1/2 group-hover:right-1/2`}
       >
         <img
-          className="absolute top-0 right-0 left-0 bottom-0 object-contain opacity-0 transition-opacity duration-1000 ease-out group-hover:opacity-100"
-          src="/star-rotated.png"
-        />
-        <img
+          id="two-dimensional-star"
           className="duration-500 ease-out opacity-100 transition-opacity group-hover:opacity-0"
           src="/star.png"
         />
+        <img
+          id="three-dimensional-star"
+          className="absolute top-0 right-0 left-0 bottom-0 object-contain opacity-0 transition-opacity duration-1000 ease-out group-hover:opacity-100"
+          src="/star-rotated.png"
+        />
 
-        {/* I NEED TO DO SOME SERIOUS REFACTORING HERE */}
-        <a href="/watchlist">add to watchlist</a>
+        <a
+          id="watchlist-page"
+          href="/watchlist"
+          className="pt-6 hover:text-purple-400 hover:font-bold opacity-0 transition-opacity duration-1000 ease-out group-hover:opacity-100"
+        >
+          <p id="watchlist-page-text">watchlist</p>
+        </a>
       </div>
     </div>
   );
@@ -95,6 +106,9 @@ const StarMenu = () => {
       />
     </>
   );
+
+  //? use this when testing
+  // return <>{StarAnimation}</>;
 
   if (showAnimation) {
     return <>{StarAnimation}</>;
