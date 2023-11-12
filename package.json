@@ -2,6 +2,9 @@
   "name": "bad-reviews-make-good-movies",
   "type": "module",
   "version": "0.0.1",
+  "engines": {
+    "node": ">=18.14.0"
+  },
   "scripts": {
     "start:sst-local": "npx sst dev",
     "start:sst-bind": "sst bind astro dev",
