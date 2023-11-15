@@ -1,7 +1,7 @@
 import { defineConfig } from "astro/config";
 import tailwind from "@astrojs/tailwind";
 import glsl from "vite-plugin-glsl";
-import aws from "astro-sst/lambda";
+import aws from "astro-sst";
 
 import react from "@astrojs/react";
 
