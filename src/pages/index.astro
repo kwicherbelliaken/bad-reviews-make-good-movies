@@ -8,11 +8,11 @@ import Layout from "../layouts/Layout.astro";
 
 <Layout title="Welcome to Astro.">
   <main class="m-auto">
-    <Header client:load/>
+    <Header />
     <div class="">
       <!-- <Form /> -->
-      <!-- <FlowerAnimation client:visible /> -->
-      <!-- <StarMenu client:only /> -->
+      <FlowerAnimation client:visible />
+      <StarMenu client:load />
     </div>
   </main>
 </Layout>
