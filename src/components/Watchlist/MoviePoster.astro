@@ -1,0 +1,28 @@
+---
+const { posterPath } = Astro.props;
+
+import { Image } from "astro:assets";
+
+const width = 500;
+const height = 750;
+
+const response = await fetch(
+  `https://dz76rj93fd.execute-api.ap-southeast-2.amazonaws.com/image?fileSize=w${width}&posterPath=${posterPath}`,
+  {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }
+);
+
+const imageUrl = await response.json();
+---
+
+<Image
+  class="rounded-md shadow-2xl ring-1 ring-gray-900/10"
+  src={imageUrl}
+  alt="A movie poster of <INSERT_MOVIE_NAME>"
+  width={width}
+  height={height}
+/>
