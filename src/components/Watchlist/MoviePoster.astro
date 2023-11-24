@@ -1,0 +1,20 @@
+---
+const { imageUrl } = Astro.props;
+
+import { Image } from "astro:assets";
+
+const width = 500;
+const height = 750;
+---
+
+<figure
+  class="rounded-xl p-2 bg-gray-900/2.5 ring-1 ring-inset ring-gray-900/10 lg:rounded-2xl lg:p-4"
+>
+  <Image
+    class="rounded-md shadow-2xl ring-1 ring-gray-900/10"
+    src={imageUrl}
+    alt="A movie poster of <INSERT_MOVIE_NAME>"
+    width={width}
+    height={height}
+  />
+</figure>
