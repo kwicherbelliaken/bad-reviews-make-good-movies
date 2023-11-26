@@ -104,7 +104,6 @@ export const findMovieInWatchlist = async (
   movieTitle: string,
   watchlist: Watchlist
 ) => {
-
   try {
     const result = await client.query({
       TableName: process.env.BRMGM_TABLE_NAME!,

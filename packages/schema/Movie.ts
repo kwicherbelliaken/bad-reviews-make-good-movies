@@ -16,10 +16,11 @@ export class Movie extends GSIItem {
   constructor(
     username: string,
     watchlistId: string,
-    movieDetails: MovieDetails
+    movieDetails: MovieDetails,
+    id?: string
   ) {
     super();
-    this.id = nanoid();
+    this.id = id ?? nanoid();
     this.username = username;
     this.watchlistId = watchlistId;
     this.movieDetails = movieDetails;
@@ -31,7 +32,12 @@ export class Movie extends GSIItem {
     if (item.watchlistId == null) throw new Error("No watchlistId!");
     if (item.movieDetails == null) throw new Error("No movieDetails!");
 
-    return new Movie(item.username, item.watchlistId, item.movieDetails);
+    return new Movie(
+      item.username,
+      item.watchlistId,
+      item.movieDetails,
+      item.id
+    );
   }
 
   get pk(): string {
@@ -61,6 +67,23 @@ export class Movie extends GSIItem {
     };
   }
 }
+
+export const deleteMovie = async (movieId: string) => {
+  try {
+    // [ ] figure out how I can resolve the keys without needing to establish a Movie item
+
+    await client.delete({
+      TableName: process.env.BRMGM_TABLE_NAME!,
+      Key: {
+        PK: `MOVIE#${movieId}`,
+        SK: `MOVIE#${movieId}`,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
 
 export const createMovie = async (movie: Movie): Promise<Movie> => {
   try {
