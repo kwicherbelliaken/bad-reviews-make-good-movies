@@ -62,9 +62,10 @@ export const RemoveWatchlist = ({ movieId }: RemoveWatchlistProps) => {
             ✅
           </span>
         ))
-        .with({ status: "error" }, () => (
+        .with({ status: "error" }, ({ error }) => (
           <span
-            className="text-4xl cursor-pointer before:content-[' '] before:hover:shadow-[18px_0_40px_20px_#defe56]"
+            className="text-4xl cursor-pointer before:content-[' '] before:hover:shadow-[18px_0_40px_20px_#E65438] after:content-[attr(data-hover)] after:opacity-0 after:bg-red-400 after:bg-opacity-30 after:outline after:outline-red-500 after:rounded-lg after:p-1 after:px-2 hover:after:visible hover:after:opacity-100 after:text-sm after:whitespace-nowrap after:text-white after:transition-opacity after:duration-750 after:ease-in-out after:delay-75 after:invisible after:absolute after:top-8"
+            data-hover={error.message}
             role="img"
             aria-label="eyes"
           >
