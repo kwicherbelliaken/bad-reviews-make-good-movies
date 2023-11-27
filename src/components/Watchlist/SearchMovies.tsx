@@ -3,6 +3,8 @@ import debounce from "debounce";
 import { match } from "ts-pattern";
 import type { BffListResponse } from "../../../packages/core/tmdb/types";
 import { Casette } from "./VHSCasette/Casette";
+import { queryClient } from "./query";
+import { useQuery } from "@tanstack/react-query";
 
 const mockPayload = [
   {
@@ -52,8 +54,24 @@ const searchMovies = async (query: string) => {
   return results;
 };
 
+const useSearchMoviesReactQueryHook = (movie: string) => {
+  return useQuery(
+    {
+      queryKey: ["searchedMovies", movie],
+      queryFn: () => searchMovies(movie),
+    },
+    queryClient
+  );
+};
+
 const useSearchMovies = () => {
   const [value, setValue] = useState("");
+
+  //! THIS IS WORKING, SUB IT IN
+  const { data, isLoading, isError, error } =
+    useSearchMoviesReactQueryHook(value);
+
+  
 
   const [result, setResult] = useState<
     | { status: "success"; data: BffListResponse }
