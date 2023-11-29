@@ -1,5 +1,4 @@
-import { useMemo, useState } from "react";
-import debounce from "debounce";
+import { useState } from "react";
 import { match } from "ts-pattern";
 import type { BffListResponse } from "../../../packages/core/tmdb/types";
 import { Casette } from "./VHSCasette/Casette";
@@ -91,37 +90,9 @@ const useSearchMovies = () => {
     result = { status: "success", data: data as BffListResponse };
   }
 
-  // const [result, setResult] = useState<
-  //   | { status: "success"; data: BffListResponse }
-  //   | { status: "error"; error: Error }
-  //   | { status: "idle" }
-  //   | { status: "loading" }
-  // >({
-  //   status: "idle",
-  // });
-
   const handleOnChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
-
-    // debouncedSearch(event.target.value);
   };
-
-  // const debouncedSearch = useMemo(
-  //   () =>
-  //     debounce(async (query: string) => {
-  //       // [ ]: use dev tools to return an error
-  //       setResult({ status: "loading" });
-
-  //       try {
-  //         const results = await searchMovies(query);
-
-  //         setResult({ status: "success", data: results });
-  //       } catch (error) {
-  //         setResult({ status: "error", error: error as unknown as Error });
-  //       }
-  //     }, 500),
-  //   []
-  // );
 
   return {
     value,
