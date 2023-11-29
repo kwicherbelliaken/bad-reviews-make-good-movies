@@ -5,6 +5,7 @@ import type { BffListResponse } from "../../../packages/core/tmdb/types";
 import { Casette } from "./VHSCasette/Casette";
 import { queryClient } from "./query";
 import { useQuery } from "@tanstack/react-query";
+import pDebounce from "p-debounce";
 
 const mockPayload = [
   {
@@ -49,61 +50,78 @@ const searchMovies = async (query: string) => {
     }
   );
 
-  const results = await response.json();
+  const data = await response.json();
 
-  return results;
+  return data;
 };
 
-const useSearchMoviesReactQueryHook = (movie: string) => {
+const debouncedSearchMovies = pDebounce(searchMovies, 500);
+
+const useSearchMoviesReactQueryHook = (movie: string | null) => {
   return useQuery(
     {
       queryKey: ["searchedMovies", movie],
-      queryFn: () => searchMovies(movie),
+      // @ts-ignore: movie will always be defined because of the enabled flag.
+      queryFn: () => debouncedSearchMovies(movie),
+
+      enabled: movie != null,
     },
+
     queryClient
   );
 };
 
 const useSearchMovies = () => {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState<null | string>(null);
 
-  //! THIS IS WORKING, SUB IT IN
   const { data, isLoading, isError, error } =
     useSearchMoviesReactQueryHook(value);
 
-  
-
-  const [result, setResult] = useState<
+  let result:
     | { status: "success"; data: BffListResponse }
     | { status: "error"; error: Error }
     | { status: "idle" }
-    | { status: "loading" }
-  >({
-    status: "idle",
-  });
+    | { status: "loading" } = { status: "idle" };
+
+  if (isLoading) {
+    result = { status: "loading" };
+  } else if (isError) {
+    result = { status: "error", error: error as Error };
+  } else if (data) {
+    result = { status: "success", data: data as BffListResponse };
+  }
+
+  // const [result, setResult] = useState<
+  //   | { status: "success"; data: BffListResponse }
+  //   | { status: "error"; error: Error }
+  //   | { status: "idle" }
+  //   | { status: "loading" }
+  // >({
+  //   status: "idle",
+  // });
 
   const handleOnChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
 
-    debouncedSearch(event.target.value);
+    // debouncedSearch(event.target.value);
   };
 
-  const debouncedSearch = useMemo(
-    () =>
-      debounce(async (query: string) => {
-        // [ ]: use dev tools to return an error
-        setResult({ status: "loading" });
+  // const debouncedSearch = useMemo(
+  //   () =>
+  //     debounce(async (query: string) => {
+  //       // [ ]: use dev tools to return an error
+  //       setResult({ status: "loading" });
 
-        try {
-          const results = await searchMovies(query);
+  //       try {
+  //         const results = await searchMovies(query);
 
-          setResult({ status: "success", data: results });
-        } catch (error) {
-          setResult({ status: "error", error: error as unknown as Error });
-        }
-      }, 500),
-    []
-  );
+  //         setResult({ status: "success", data: results });
+  //       } catch (error) {
+  //         setResult({ status: "error", error: error as unknown as Error });
+  //       }
+  //     }, 500),
+  //   []
+  // );
 
   return {
     value,
