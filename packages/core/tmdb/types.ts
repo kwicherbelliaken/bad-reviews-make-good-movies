@@ -116,9 +116,12 @@ export type ConfigurationDetails = {
   change_keys: Array<string>;
 };
 
+// [ ] rename this type to make more sense
+
 export type BffListResponse = Array<
   Pick<Movie, "title" | "release_date" | "overview" | "poster_path"> & {
     cast: Array<Pick<Cast, "name" | "character">>;
+    genres: Array<Pick<Genre, "name">>;
   }
 >;
 

@@ -2,7 +2,8 @@
 import Header from "../components/Header";
 import Layout from "../layouts/Layout.astro";
 import { SearchMovies } from "../components/Watchlist/SearchMovies";
-import WatchlistMovies from "../components/Watchlist/WatchlistMovies.astro";
+import { WatchlistMovies } from "../components/Watchlist/WatchlistMovies";
+// import WatchlistMovies from "../components/Watchlist/WatchlistMovies.astro";
 ---
 
 <Layout title="Welcome to Astro.">
@@ -13,7 +14,8 @@ import WatchlistMovies from "../components/Watchlist/WatchlistMovies.astro";
         <h1>Search</h1>
         <SearchMovies client:only/>
       </div>
-      <WatchlistMovies />
+      <WatchlistMovies client:load />
+      <!-- <WatchlistMovies /> -->
     </div>
   </main>
 </Layout>

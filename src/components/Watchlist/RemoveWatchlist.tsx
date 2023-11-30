@@ -3,7 +3,7 @@ import { match } from "ts-pattern";
 import { LoadingSpinner } from "../LoadingSpinner/LoadingSpinner";
 
 interface RemoveWatchlistProps {
-  movieId: number;
+  movieId: string;
 }
 
 export const RemoveWatchlist = ({ movieId }: RemoveWatchlistProps) => {
