@@ -35,18 +35,25 @@ const useGetWatchlistMovies = () => {
 };
 
 export const WatchlistMovies = ({}: WatchlistMoviesProps) => {
-  const { data, isLoading, isError, error } = useGetWatchlistMovies();
+  const { data, isLoading, isFetching, isRefetching, isError, error } =
+    useGetWatchlistMovies();
+
+  // [ ] better handle the different possible states
 
   if (data == null) {
     return null;
-  } else if (isLoading) {
-    return <LoadingSpinner />;
+  } else if (isLoading || isFetching || isRefetching) {
+    return (
+      <div className="flex flex-col w-[70%] h-full align-middle items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
   }
 
   return (
     <div className="flex flex-col w-[70%] h-full gap-4">
       {data.map((movie) => (
-        <WatchlistMovie movie={movie} />
+        <WatchlistMovie key={movie.movieDetails.title} movie={movie} />
       ))}
     </div>
   );

@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { match } from "ts-pattern";
-import type { BffListResponse } from "../../../packages/core/tmdb/types";
-import { Casette } from "./VHSCasette/Casette";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryClient } from "./query";
-import { useQuery } from "@tanstack/react-query";
 import pDebounce from "p-debounce";
+
+import { Casette } from "./VHSCasette/Casette";
+
+import type { BffListResponse } from "../../../packages/core/tmdb/types";
 
 const mockPayload = [
   {
@@ -101,51 +103,52 @@ const useSearchMovies = () => {
   };
 };
 
-const useAddMovieToWatchlist = () => {
-  const [result, setResult] = useState<
-    | { status: "success" }
-    | { status: "error"; error: Error }
-    | { status: "idle" }
-    | { status: "loading" }
-  >({
-    status: "idle",
-  });
+//! this was the original one
+// const useAddMovieToWatchlist = () => {
+//   const [result, setResult] = useState<
+//     | { status: "success" }
+//     | { status: "error"; error: Error }
+//     | { status: "idle" }
+//     | { status: "loading" }
+//   >({
+//     status: "idle",
+//   });
 
-  const addMovieToWatchlist = async (payload: any) => {
-    setResult({ status: "loading" });
+//   const addMovieToWatchlist = async (payload: any) => {
+//     setResult({ status: "loading" });
 
-    try {
-      const response = await fetch(
-        "https://hh2877m7a0.execute-api.ap-southeast-2.amazonaws.com/movies",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            username: "trial-user",
-            watchlistId: "8JWw9ZPsUtkD-14h0Fnzs",
-            payload,
-          }),
-        }
-      );
+//     try {
+//       const response = await fetch(
+//         "https://hh2877m7a0.execute-api.ap-southeast-2.amazonaws.com/movies",
+//         {
+//           method: "POST",
+//           body: JSON.stringify({
+//             username: "trial-user",
+//             watchlistId: "8JWw9ZPsUtkD-14h0Fnzs",
+//             payload,
+//           }),
+//         }
+//       );
 
-      // NB: Critically important to actually read the response body. If we don't
-      // Node Fetch leaks connections: https://github.com/node-fetch/node-fetch/issues/499
-      const body = await response.json();
+//       // NB: Critically important to actually read the response body. If we don't
+//       // Node Fetch leaks connections: https://github.com/node-fetch/node-fetch/issues/499
+//       const body = await response.json();
 
-      if (response.status !== 200 || !response.ok) {
-        throw new Error(body.error);
-      }
+//       if (response.status !== 200 || !response.ok) {
+//         throw new Error(body.error);
+//       }
 
-      setResult({ status: "success" });
-    } catch (error) {
-      setResult({ status: "error", error: error as unknown as Error });
-    }
-  };
+//       setResult({ status: "success" });
+//     } catch (error) {
+//       setResult({ status: "error", error: error as unknown as Error });
+//     }
+//   };
 
-  return {
-    result: result,
-    addMovieToWatchlist,
-  };
-};
+//   return {
+//     result: result,
+//     addMovieToWatchlist,
+//   };
+// };
 
 export const SearchMovies = ({}: SearchMoviesProps) => {
   const { value, result, search } = useSearchMovies();
@@ -219,6 +222,59 @@ const MovieContent = ({
   );
 };
 
+const addMovieToWatchlist = async (payload: any) => {
+  const response = await fetch(
+    "https://hh2877m7a0.execute-api.ap-southeast-2.amazonaws.com/movies",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        username: "trial-user",
+        watchlistId: "8JWw9ZPsUtkD-14h0Fnzs",
+        payload,
+      }),
+    }
+  );
+
+  // NB: Critically important to actually read the response body. If we don't
+  // Node Fetch leaks connections: https://github.com/node-fetch/node-fetch/issues/499
+  const body = await response.json();
+
+  if (response.status !== 200 || !response.ok) {
+    throw new Error(body.error);
+  }
+};
+
+const useAddMovieToWatchlist = () => {
+  const { mutate, isPending, isError, error, data } = useMutation(
+    {
+      mutationFn: addMovieToWatchlist,
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["watchlistMovies"] });
+      },
+    },
+    queryClient
+  );
+
+  let result:
+    | { status: "success" }
+    | { status: "error"; error: Error }
+    | { status: "idle" }
+    | { status: "loading" } = { status: "idle" };
+
+  if (isPending) {
+    result = { status: "loading" };
+  } else if (isError) {
+    result = { status: "error", error: error as Error };
+  } else if (data) {
+    result = { status: "success" };
+  }
+
+  return {
+    result: result,
+    addMovieToWatchlist: mutate,
+  };
+};
+
 const Movie = ({
   movie,
   movies,
@@ -241,7 +297,7 @@ const Movie = ({
 
     // [ ] I need proper error handling in the event that the movie is already on the watchlist
 
-    await addMovieToWatchlist(payload);
+    addMovieToWatchlist(payload);
   };
 
   return (
