@@ -1,50 +1,72 @@
 import { useState } from "react";
 import { match } from "ts-pattern";
 import { LoadingSpinner } from "../LoadingSpinner/LoadingSpinner";
+import { queryClient } from "./query";
+import { useMutation } from "@tanstack/react-query";
 
 interface RemoveWatchlistProps {
   movieId: string;
 }
 
-export const RemoveWatchlist = ({ movieId }: RemoveWatchlistProps) => {
-  const [result, setResult] = useState<
+// [ ] convert to using react query mutation
+
+const removeFromWatchlist = async (movieId: string) => {
+  const queryParams = new URLSearchParams({
+    movieId: movieId.toString(),
+  });
+
+  const response = await fetch(
+    "https://hh2877m7a0.execute-api.ap-southeast-2.amazonaws.com/movies?" +
+      queryParams,
+    {
+      method: "DELETE",
+    }
+  );
+
+  if (response.status !== 200 || !response.ok) {
+    // NB: Critically important to actually read the response body. If we don't
+    // Node Fetch leaks connections: https://github.com/node-fetch/node-fetch/issues/499
+    const body = await response.json();
+
+    throw new Error(body.error);
+  }
+};
+
+const useRemoveFromWatchlist = () => {
+  const { mutate, isPending, isError, error, data } = useMutation(
+    {
+      mutationFn: removeFromWatchlist,
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["watchlistMovies"] });
+      },
+    },
+    queryClient
+  );
+
+  let result:
     | { status: "success" }
     | { status: "error"; error: Error }
     | { status: "idle" }
-    | { status: "loading" }
-  >({
-    status: "idle",
-  });
+    | { status: "loading" } = { status: "idle" };
 
-  const handleRemove = async () => {
-    setResult({ status: "loading" });
+  if (isPending) {
+    result = { status: "loading" };
+  } else if (isError) {
+    result = { status: "error", error: error as Error };
+  } else if (data) {
+    result = { status: "success" };
+  }
 
-    try {
-      const queryParams = new URLSearchParams({
-        movieId: movieId.toString(),
-      });
-
-      const response = await fetch(
-        "https://hh2877m7a0.execute-api.ap-southeast-2.amazonaws.com/movies?" +
-          queryParams,
-        {
-          method: "DELETE",
-        }
-      );
-
-      if (response.status !== 200 || !response.ok) {
-        // NB: Critically important to actually read the response body. If we don't
-        // Node Fetch leaks connections: https://github.com/node-fetch/node-fetch/issues/499
-        const body = await response.json();
-
-        throw new Error(body.error);
-      }
-
-      setResult({ status: "success" });
-    } catch (error) {
-      setResult({ status: "error", error: error as unknown as Error });
-    }
+  return {
+    remove: mutate,
+    result,
   };
+};
+
+export const RemoveWatchlist = ({ movieId }: RemoveWatchlistProps) => {
+  const { remove, result } = useRemoveFromWatchlist();
+
+  const handleRemove = () => remove(movieId);
 
   return (
     <div
