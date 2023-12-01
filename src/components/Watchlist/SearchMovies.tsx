@@ -8,33 +8,6 @@ import { Casette } from "./VHSCasette/Casette";
 
 import type { BffListResponse } from "../../../packages/core/tmdb/types";
 
-const mockPayload = [
-  {
-    title: "Bee Movie",
-    release_date: "2007-10-28",
-    overview:
-      "Barry B. Benson, a bee who has just graduated from college, is disillusioned at his lone career choice: making honey. On a special trip outside the hive, Barry's life is saved by Vanessa, a florist in New York City. As their relationship blossoms, he discovers humans actually eat honey, and subsequently decides to sue us.",
-    poster_path: "/1xlHV0AMoXQAOPAZXLQgq39tRCJ.jpg",
-    cast: [
-      { name: "Jerry Seinfeld", character: "Barry B. Benson (voice)" },
-      { name: "Renée Zellweger", character: "Vanessa Bloome (voice)" },
-    ],
-    genres: ["Family", "Animation", "Adventure", "Comedy"],
-  },
-  {
-    title: "Maya the Bee Movie",
-    release_date: "2014-09-11",
-    overview:
-      "Freshly hatched bee Maya is a little whirlwind and won't follow the rules of the hive. One of these rules is not to trust the hornets that live beyond the meadow. When the Royal Jelly is stolen, the hornets are suspected and Maya is thought to be their accomplice. No one believes that she is the innocent victim and no one will stand by her except for her good-natured and best friend Willy. After a long and eventful journey to the hornets hive Maya and Willy soon discover the true culprit and the two friends finally bond with the other residents of the opulent meadow.",
-    poster_path: "/pMQ88CvnQroSjxk4IhM7YNbcjTx.jpg",
-    cast: [
-      { name: "Coco Jack Gillies", character: "Maya (voice)" },
-      { name: "Kodi Smit-McPhee", character: "Willy (voice)" },
-    ],
-    genres: ["Family", "Animation"],
-  },
-];
-
 interface SearchMoviesProps {}
 
 // [ ]: implement proper error handling
@@ -58,25 +31,19 @@ const searchMovies = async (query: string) => {
 
 const debouncedSearchMovies = pDebounce(searchMovies, 500);
 
-const useSearchMoviesReactQueryHook = (movie: string | null) => {
-  return useQuery(
-    {
-      queryKey: ["searchedMovies", movie],
-      // @ts-ignore: movie will always be defined because of the enabled flag.
-      queryFn: () => debouncedSearchMovies(movie),
+const useSearchMovies = () => {
+  const [value, setValue] = useState<null | string>(null);
 
-      enabled: movie != null,
+  const { data, isLoading, isError, error } = useQuery(
+    {
+      queryKey: ["searchedMovies", value],
+      // @ts-ignore: movie will always be defined because of the enabled flag.
+      queryFn: debouncedSearchMovies,
+      enabled: value != null,
     },
 
     queryClient
   );
-};
-
-const useSearchMovies = () => {
-  const [value, setValue] = useState<null | string>(null);
-
-  const { data, isLoading, isError, error } =
-    useSearchMoviesReactQueryHook(value);
 
   let result:
     | { status: "success"; data: BffListResponse }
@@ -102,53 +69,6 @@ const useSearchMovies = () => {
     search: handleOnChange,
   };
 };
-
-//! this was the original one
-// const useAddMovieToWatchlist = () => {
-//   const [result, setResult] = useState<
-//     | { status: "success" }
-//     | { status: "error"; error: Error }
-//     | { status: "idle" }
-//     | { status: "loading" }
-//   >({
-//     status: "idle",
-//   });
-
-//   const addMovieToWatchlist = async (payload: any) => {
-//     setResult({ status: "loading" });
-
-//     try {
-//       const response = await fetch(
-//         "https://hh2877m7a0.execute-api.ap-southeast-2.amazonaws.com/movies",
-//         {
-//           method: "POST",
-//           body: JSON.stringify({
-//             username: "trial-user",
-//             watchlistId: "8JWw9ZPsUtkD-14h0Fnzs",
-//             payload,
-//           }),
-//         }
-//       );
-
-//       // NB: Critically important to actually read the response body. If we don't
-//       // Node Fetch leaks connections: https://github.com/node-fetch/node-fetch/issues/499
-//       const body = await response.json();
-
-//       if (response.status !== 200 || !response.ok) {
-//         throw new Error(body.error);
-//       }
-
-//       setResult({ status: "success" });
-//     } catch (error) {
-//       setResult({ status: "error", error: error as unknown as Error });
-//     }
-//   };
-
-//   return {
-//     result: result,
-//     addMovieToWatchlist,
-//   };
-// };
 
 export const SearchMovies = ({}: SearchMoviesProps) => {
   const { value, result, search } = useSearchMovies();
