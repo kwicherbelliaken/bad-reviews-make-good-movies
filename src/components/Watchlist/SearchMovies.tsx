@@ -6,8 +6,6 @@ import pDebounce from "p-debounce";
 
 import { Casette } from "./VHSCasette/Casette";
 
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-
 import type { BffListResponse } from "../../../packages/core/tmdb/types";
 
 interface SearchMoviesProps {}
@@ -36,14 +34,14 @@ const searchMovies = async (query: string) => {
 const debouncedSearchMovies = pDebounce(searchMovies, 500);
 
 const useSearchMovies = () => {
-  const [value, setValue] = useState<null | string>(null);
+  const [value, setValue] = useState("");
 
   const { data, isLoading, isError, error } = useQuery(
     {
       queryKey: ["searchedMovies", value],
       // @ts-ignore: movie will always be defined because of the enabled flag.
       queryFn: () => debouncedSearchMovies(value),
-      enabled: value != null,
+      enabled: value !== "",
     },
 
     queryClient
@@ -296,7 +294,6 @@ const Movies = ({ movies }: { movies: BffListResponse }) => {
       {movies?.map((movie, index) => (
         <Movie key={`${movie.title}-${index}`} movie={movie} movies={movies} />
       ))}
-      {/* <ReactQueryDevtools initialIsOpen={true} client={queryClient} /> */}
     </div>
   );
 };

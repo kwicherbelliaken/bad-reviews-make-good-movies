@@ -53,7 +53,10 @@ export const WatchlistMovies = ({}: WatchlistMoviesProps) => {
   return (
     <div className="flex flex-col w-[70%] h-full gap-4">
       {data.map((movie) => (
-        <WatchlistMovie key={movie.movieDetails.title} movie={movie} />
+        <WatchlistMovie
+          key={`${movie.movieDetails.title}-${movie.movieDetails.release_date}`}
+          movie={movie}
+        />
       ))}
     </div>
   );
