@@ -6,10 +6,13 @@ import pDebounce from "p-debounce";
 
 import { Casette } from "./VHSCasette/Casette";
 
-import type { BffListResponse } from "../../../packages/core/tmdb/types";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
+import type { BffListResponse } from "../../../packages/core/tmdb/types";
+
 interface SearchMoviesProps {}
+
+// [ ] remove item from search list when added to the watchlist
 
 // [ ]: implement proper error handling
 const searchMovies = async (query: string) => {
@@ -156,6 +159,8 @@ const addMovieToWatchlist = async (payload: any) => {
     }
   );
 
+  // [ ] think about returning the movie from the server so I can return it here
+
   // NB: Critically important to actually read the response body. If we don't
   // Node Fetch leaks connections: https://github.com/node-fetch/node-fetch/issues/499
   const body = await response.json();
@@ -163,14 +168,43 @@ const addMovieToWatchlist = async (payload: any) => {
   if (response.status !== 200 || !response.ok) {
     throw new Error(body.error);
   }
+
+  return payload;
 };
 
 const useAddMovieToWatchlist = () => {
   const { mutate, isPending, isError, error, data } = useMutation(
     {
       mutationFn: addMovieToWatchlist,
-      onSuccess: () => {
+      onSuccess: (response: BffListResponse[0]) => {
+        // 1. We refresh the list of Watchlist Movies.
         queryClient.invalidateQueries({ queryKey: ["watchlistMovies"] });
+
+        // 2. We remove the Movie we just added to the Watchlist from the list of Searched Movies.
+        const queryCache = queryClient.getQueryCache();
+
+        const activeSearchedMoviesQueryKeys = queryCache
+          .findAll({
+            queryKey: ["searchedMovies"],
+          })
+          .map(({ queryKey }) => queryKey);
+
+        // [ ] https://github.com/slackermorris/bad-reviews-make-good-movies/issues/76
+
+        const mostRecentSearchedMoviesQueryKey =
+          activeSearchedMoviesQueryKeys[
+            activeSearchedMoviesQueryKeys.length - 1
+          ];
+
+        queryClient.setQueryData(
+          mostRecentSearchedMoviesQueryKey,
+          (oldData: any) => {
+            return oldData.filter(
+              (movie: any) =>
+                movie.title.toLowerCase() !== response.title.toLowerCase()
+            );
+          }
+        );
       },
     },
     queryClient
