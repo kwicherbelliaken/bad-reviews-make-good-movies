@@ -1,37 +1,16 @@
-import { useMemo, useState } from "react";
-import debounce from "debounce";
+import { useState } from "react";
 import { match } from "ts-pattern";
-import type { BffListResponse } from "../../../packages/core/tmdb/types";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { queryClient } from "./query";
+import pDebounce from "p-debounce";
+
 import { Casette } from "./VHSCasette/Casette";
 
-const mockPayload = [
-  {
-    title: "Bee Movie",
-    release_date: "2007-10-28",
-    overview:
-      "Barry B. Benson, a bee who has just graduated from college, is disillusioned at his lone career choice: making honey. On a special trip outside the hive, Barry's life is saved by Vanessa, a florist in New York City. As their relationship blossoms, he discovers humans actually eat honey, and subsequently decides to sue us.",
-    poster_path: "/1xlHV0AMoXQAOPAZXLQgq39tRCJ.jpg",
-    cast: [
-      { name: "Jerry Seinfeld", character: "Barry B. Benson (voice)" },
-      { name: "Renée Zellweger", character: "Vanessa Bloome (voice)" },
-    ],
-    genres: ["Family", "Animation", "Adventure", "Comedy"],
-  },
-  {
-    title: "Maya the Bee Movie",
-    release_date: "2014-09-11",
-    overview:
-      "Freshly hatched bee Maya is a little whirlwind and won't follow the rules of the hive. One of these rules is not to trust the hornets that live beyond the meadow. When the Royal Jelly is stolen, the hornets are suspected and Maya is thought to be their accomplice. No one believes that she is the innocent victim and no one will stand by her except for her good-natured and best friend Willy. After a long and eventful journey to the hornets hive Maya and Willy soon discover the true culprit and the two friends finally bond with the other residents of the opulent meadow.",
-    poster_path: "/pMQ88CvnQroSjxk4IhM7YNbcjTx.jpg",
-    cast: [
-      { name: "Coco Jack Gillies", character: "Maya (voice)" },
-      { name: "Kodi Smit-McPhee", character: "Willy (voice)" },
-    ],
-    genres: ["Family", "Animation"],
-  },
-];
+import type { BffListResponse } from "../../../packages/core/tmdb/types";
 
 interface SearchMoviesProps {}
+
+// [ ] remove item from search list when added to the watchlist
 
 // [ ]: implement proper error handling
 const searchMovies = async (query: string) => {
@@ -47,96 +26,49 @@ const searchMovies = async (query: string) => {
     }
   );
 
-  const results = await response.json();
+  const data = await response.json();
 
-  return results;
+  return data;
 };
+
+const debouncedSearchMovies = pDebounce(searchMovies, 500);
 
 const useSearchMovies = () => {
   const [value, setValue] = useState("");
 
-  const [result, setResult] = useState<
+  const { data, isLoading, isError, error } = useQuery(
+    {
+      queryKey: ["searchedMovies", value],
+      // @ts-ignore: movie will always be defined because of the enabled flag.
+      queryFn: () => debouncedSearchMovies(value),
+      enabled: value !== "",
+    },
+
+    queryClient
+  );
+
+  let result:
     | { status: "success"; data: BffListResponse }
     | { status: "error"; error: Error }
     | { status: "idle" }
-    | { status: "loading" }
-  >({
-    status: "idle",
-  });
+    | { status: "loading" } = { status: "idle" };
+
+  if (isLoading) {
+    result = { status: "loading" };
+  } else if (isError) {
+    result = { status: "error", error: error as Error };
+  } else if (data) {
+    result = { status: "success", data: data as BffListResponse };
+  }
 
   const handleOnChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
-
-    debouncedSearch(event.target.value);
   };
-
-  const debouncedSearch = useMemo(
-    () =>
-      debounce(async (query: string) => {
-        // [ ]: use dev tools to return an error
-        setResult({ status: "loading" });
-
-        try {
-          const results = await searchMovies(query);
-
-          setResult({ status: "success", data: results });
-        } catch (error) {
-          setResult({ status: "error", error: error as unknown as Error });
-        }
-      }, 500),
-    []
-  );
 
   return {
     value,
     result: result,
     search: handleOnChange,
-  };
-};
-
-const useAddMovieToWatchlist = () => {
-  const [result, setResult] = useState<
-    | { status: "success" }
-    | { status: "error"; error: Error }
-    | { status: "idle" }
-    | { status: "loading" }
-  >({
-    status: "idle",
-  });
-
-  const addMovieToWatchlist = async (payload: any) => {
-    setResult({ status: "loading" });
-
-    try {
-      const response = await fetch(
-        "https://hh2877m7a0.execute-api.ap-southeast-2.amazonaws.com/movies",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            username: "trial-user",
-            watchlistId: "8JWw9ZPsUtkD-14h0Fnzs",
-            payload,
-          }),
-        }
-      );
-
-      // NB: Critically important to actually read the response body. If we don't
-      // Node Fetch leaks connections: https://github.com/node-fetch/node-fetch/issues/499
-      const body = await response.json();
-
-      if (response.status !== 200 || !response.ok) {
-        throw new Error(body.error);
-      }
-
-      setResult({ status: "success" });
-    } catch (error) {
-      setResult({ status: "error", error: error as unknown as Error });
-    }
-  };
-
-  return {
-    result: result,
-    addMovieToWatchlist,
   };
 };
 
@@ -212,6 +144,90 @@ const MovieContent = ({
   );
 };
 
+const addMovieToWatchlist = async (payload: any) => {
+  const response = await fetch(
+    "https://hh2877m7a0.execute-api.ap-southeast-2.amazonaws.com/movies",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        username: "trial-user",
+        watchlistId: "8JWw9ZPsUtkD-14h0Fnzs",
+        payload,
+      }),
+    }
+  );
+
+  // [ ] think about returning the movie from the server so I can return it here
+
+  // NB: Critically important to actually read the response body. If we don't
+  // Node Fetch leaks connections: https://github.com/node-fetch/node-fetch/issues/499
+  const body = await response.json();
+
+  if (response.status !== 200 || !response.ok) {
+    throw new Error(body.error);
+  }
+
+  return payload;
+};
+
+const useAddMovieToWatchlist = () => {
+  const { mutate, isPending, isError, error, data } = useMutation(
+    {
+      mutationFn: addMovieToWatchlist,
+      onSuccess: (response: BffListResponse[0]) => {
+        // 1. We refresh the list of Watchlist Movies.
+        queryClient.invalidateQueries({ queryKey: ["watchlistMovies"] });
+
+        // 2. We remove the Movie we just added to the Watchlist from the list of Searched Movies.
+        const queryCache = queryClient.getQueryCache();
+
+        const activeSearchedMoviesQueryKeys = queryCache
+          .findAll({
+            queryKey: ["searchedMovies"],
+          })
+          .map(({ queryKey }) => queryKey);
+
+        // [ ] https://github.com/slackermorris/bad-reviews-make-good-movies/issues/76
+
+        const mostRecentSearchedMoviesQueryKey =
+          activeSearchedMoviesQueryKeys[
+            activeSearchedMoviesQueryKeys.length - 1
+          ];
+
+        queryClient.setQueryData(
+          mostRecentSearchedMoviesQueryKey,
+          (oldData: any) => {
+            return oldData.filter(
+              (movie: any) =>
+                movie.title.toLowerCase() !== response.title.toLowerCase()
+            );
+          }
+        );
+      },
+    },
+    queryClient
+  );
+
+  let result:
+    | { status: "success" }
+    | { status: "error"; error: Error }
+    | { status: "idle" }
+    | { status: "loading" } = { status: "idle" };
+
+  if (isPending) {
+    result = { status: "loading" };
+  } else if (isError) {
+    result = { status: "error", error: error as Error };
+  } else if (data) {
+    result = { status: "success" };
+  }
+
+  return {
+    result: result,
+    addMovieToWatchlist: mutate,
+  };
+};
+
 const Movie = ({
   movie,
   movies,
@@ -234,7 +250,7 @@ const Movie = ({
 
     // [ ] I need proper error handling in the event that the movie is already on the watchlist
 
-    await addMovieToWatchlist(payload);
+    addMovieToWatchlist(payload);
   };
 
   return (
