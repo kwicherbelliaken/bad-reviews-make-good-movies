@@ -7,7 +7,7 @@ interface MoviePosterProps {
 
 export const MoviePoster = ({ imageUrl }: MoviePosterProps) => {
   return (
-    <figure className="rounded-xl p-2 bg-gray-900/2.5 ring-1 ring-inset ring-gray-900/10 lg:rounded-2xl lg:p-4">
+    <figure className="rounded-xl p-2 bg-gray-900/2.5 ring-1 ring-inset ring-gray-900/10 lg:rounded-2xl lg:p-4 h-fit">
       <img
         className="rounded-md shadow-2xl ring-1 ring-gray-900/10"
         src={imageUrl}
