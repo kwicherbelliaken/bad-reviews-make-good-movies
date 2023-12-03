@@ -70,7 +70,7 @@ export const WatchlistMovie = ({ movie }: WatchlistMovieProps) => {
 
         <div className="py-10">
           {(movie.movieDetails.cast ?? []).map((cast) => (
-            <p className="indent-7">
+            <p className="indent-7" key={`${cast.name} as ${cast.character}`}>
               {cast.name} as {cast.character}
             </p>
           ))}
