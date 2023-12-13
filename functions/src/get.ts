@@ -13,11 +13,18 @@ const eventSchema = z.object({
 export type GetUserEvent = Pick<APIGatewayProxyEventV2, "pathParameters"> &
   z.infer<typeof eventSchema>;
 
+const validateEvent = (event: GetUserEvent) => eventSchema.parse(event);
+
 export const handler = handlerWrapper<GetUserEvent, User>(async (event) => {
-  // const validatedEvent = eventSchema.parse(event);
-  // [ ] what does parse do?
+  const {
+    pathParameters: { username },
+  } = validateEvent(event);
 
-  const response = await getUser(event.pathParameters.username);
+  console.log("🚀 ~ file: get.ts:22 ~ handler ~ username:", username);
 
-  return response;
+  // const response = await getUser(username);
+
+  // return response;
+
+  return {};
 });

@@ -6,6 +6,7 @@
     "node": ">=18.14.1"
   },
   "scripts": {
+    "test": "vitest",
     "start:sst-local": "npx sst dev",
     "start:sst-bind": "sst bind astro dev",
     "start:astro": "astro dev",
@@ -45,6 +46,7 @@
     "constructs": "10.2.69",
     "sst": "2.36.1",
     "typescript": "^5.2.2",
-    "vite-plugin-glsl": "^1.1.2"
+    "vite-plugin-glsl": "^1.1.2",
+    "vitest": "^1.0.4"
   }
 }
