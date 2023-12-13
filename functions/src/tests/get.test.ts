@@ -1,7 +1,7 @@
 import type { APIGatewayEventRequestContextV2 } from "aws-lambda";
 import { handler as getUserHandler, type GetUserEvent } from "../get";
 
-import { describe, test, expect, assert } from "vitest";
+import { describe, test, expect } from "vitest";
 
 const mockBaseEvent: GetUserEvent = {
   pathParameters: {
