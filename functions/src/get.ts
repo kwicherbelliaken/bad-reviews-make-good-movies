@@ -20,11 +20,7 @@ export const handler = handlerWrapper<GetUserEvent, User>(async (event) => {
     pathParameters: { username },
   } = validateEvent(event);
 
-  console.log("🚀 ~ file: get.ts:22 ~ handler ~ username:", username);
+  const response = await getUser(username);
 
-  // const response = await getUser(username);
-
-  // return response;
-
-  return {};
+  return response;
 });

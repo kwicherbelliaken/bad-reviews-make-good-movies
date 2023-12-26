@@ -4,7 +4,6 @@ import { Item } from "./Base";
 import client from "../core/dynamodb";
 import { Watchlist } from "./Watchlist";
 
-
 export class User extends Item {
   username: string;
 
