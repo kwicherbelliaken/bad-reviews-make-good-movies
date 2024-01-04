@@ -15,12 +15,18 @@ export type CreateUserEvent = Pick<APIGatewayProxyEventV2, "body"> &
 
 const validateEvent = (event: CreateUserEvent) => eventSchema.parse(event);
 
-export const handler = handlerWrapper<CreateUserEvent, User>(async (event) => {
-  const {
-    body: { username },
-  } = validateEvent(event);
+export const handler = handlerWrapper<CreateUserEvent, User>(
+  async (event) => {
+    console.log("🚀 ~ file: create.ts:19 ~ handler ~ event:", event);
+    const {
+      body: { username },
+    } = validateEvent(event);
 
-  const user = await createUser(new User(username));
+    const user = await createUser(new User(username));
 
-  return user;
-});
+    return user;
+  },
+  {
+    httpJsonBodyParserEnabled: true,
+  }
+);
