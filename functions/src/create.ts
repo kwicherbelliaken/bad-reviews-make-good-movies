@@ -1,22 +1,26 @@
+import { z } from "zod";
 import { default as handlerWrapper } from "../../packages/core/handler";
 import { User, createUser } from "../../packages/schema/User";
 
-// [x]: perform validation on the body
-// [x]: move this into its own service file
-// [x]: how to add type support for this event
-// [ ]: have a look at the context API for API Gateway
-// [ ]: think about adding zod validation for these endpoints
+import type { APIGatewayProxyEventV2 } from "aws-lambda";
 
-//! The typing is wonky. I need to attend to it.
-// @ts-ignore
-export const handler = handlerWrapper(async (event) => {
-  if (event.body == null) {
-    throw new Error("The request is missing a body");
-  }
+const eventSchema = z.object({
+  body: z.object({
+    username: z.string(),
+  }),
+});
 
-  const data = JSON.parse(event.body);
+export type CreateUserEvent = Pick<APIGatewayProxyEventV2, "body"> &
+  z.infer<typeof eventSchema>;
 
-  const user = await createUser(new User(data.username));
+const validateEvent = (event: CreateUserEvent) => eventSchema.parse(event);
+
+export const handler = handlerWrapper<CreateUserEvent, User>(async (event) => {
+  const {
+    body: { username },
+  } = validateEvent(event);
+
+  const user = await createUser(new User(username));
 
   return user;
 });

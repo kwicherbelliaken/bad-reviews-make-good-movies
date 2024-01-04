@@ -4,7 +4,9 @@ import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import {
   DynamoDBDocumentClient,
   GetCommand,
+  PutCommand,
   type GetCommandInput,
+  type PutCommandInput,
 } from "@aws-sdk/lib-dynamodb";
 
 const dynamodb = new DynamoDBClient({});
@@ -22,8 +24,13 @@ export default {
 
     return response;
   },
-  // put: (params: AWS.DynamoDB.DocumentClient.PutItemInput) =>
-  //   client.put(params).promise(),
+  put: async (params: PutCommandInput) => {
+    const command = new PutCommand(params);
+
+    const response = await client.send(command);
+
+    return response;
+  },
   // query: (params: AWS.DynamoDB.DocumentClient.QueryInput) =>
   //   client.query(params).promise(),
   // update: (params: AWS.DynamoDB.DocumentClient.UpdateItemInput) =>

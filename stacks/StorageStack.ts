@@ -1,4 +1,4 @@
-import { StackContext, Table } from "sst/constructs";
+import { type StackContext, Table } from "sst/constructs";
 
 // [ ]: this should be single table design
 

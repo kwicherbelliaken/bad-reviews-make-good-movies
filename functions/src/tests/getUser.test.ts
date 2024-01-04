@@ -27,7 +27,7 @@ describe("[handlers - GET /users/{username}]: get a user", () => {
     // @ts-ignore: This is a PITA. Yes, the handler will receive a legitimate APIGatewayProxyEventV2, but it only makes use of some of it (pathParameters), so it's not worth the effort to mock the entire thing.
     await getUserHandler(event, mockBaseContext);
 
-  test("should successfully return the user", async () => {
+  test("should successfully return the user when passed a `username` for an existing user", async () => {
     ddbMock.on(GetCommand).resolves({
       Item: {
         PK: "USER#trial-user",
@@ -56,4 +56,10 @@ describe("[handlers - GET /users/{username}]: get a user", () => {
       "Uh oh, encountered a validation error. Expected 'username' to be a string but got undefined"
     );
   });
+
+  test.todo("should fail to return a user because user with passed `username` does not exist");
+
+  test.todo(
+    "should fail to return a user because of error with DynamoDB client"
+  );
 });
