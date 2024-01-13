@@ -52,6 +52,10 @@ export const createUser = async (user: User): Promise<User> => {
 
     return user;
   } catch (error) {
+    // [ ] improve the error handling, this happened when trying to add a user of the same username.
+    // {
+    //   "error": "The conditional request failed"
+    // }
     console.log(error);
     throw error;
   }

@@ -5,6 +5,10 @@ import { ApiHandler } from "sst/node/api";
 import middy from "@middy/core";
 import httpJsonBodyParser from "@middy/http-json-body-parser";
 import httpHeaderNormalizer from "@middy/http-header-normalizer";
+import { zodValidate } from "./middleware/zodValidate";
+
+import type { SomeZodObject } from "zod";
+import httpErrorHandler from "@middy/http-error-handler";
 
 type AsyncHandler<
   T extends Handler,
@@ -27,7 +31,7 @@ const _reportError = (message: string) => {
 };
 
 /**
- * This wrapper allows us to centrally handle any errors that occur in our lambda functions.
+ * As well as allowing us to centrally handle any errors that occur in our lambda functions, this wrapper also allows us to attach middy middlewares to our lambdas.
  * @returns HTTP response (our lambdas handle API endpoints).
  */
 const handler = <CustomAPIGatewayProxyEvent, LambaResultType>(
@@ -35,6 +39,7 @@ const handler = <CustomAPIGatewayProxyEvent, LambaResultType>(
     CustomAPIGatewayProxyEvent,
     LambaResultType
   >,
+  eventSchema: SomeZodObject,
   middyMiddlewares: {
     httpJsonBodyParserEnabled: boolean;
   } = {
@@ -43,7 +48,6 @@ const handler = <CustomAPIGatewayProxyEvent, LambaResultType>(
 ) => {
   const middyHandlerWrapper = middy().handler(
     ApiHandler(async (event, context) => {
-      console.log("🚀 ~ file: handler.ts:39 ~ handlerWrapper ~ event:", event);
       let body, statusCode;
 
       try {
@@ -69,7 +73,11 @@ const handler = <CustomAPIGatewayProxyEvent, LambaResultType>(
 
   middyHandlerWrapper.use(httpHeaderNormalizer());
 
+  middyHandlerWrapper.use(zodValidate(eventSchema));
+
   httpJsonBodyParserEnabled && middyHandlerWrapper.use(httpJsonBodyParser());
+
+  middyHandlerWrapper.use(httpErrorHandler());
 
   return middyHandlerWrapper;
 };

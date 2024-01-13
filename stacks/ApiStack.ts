@@ -20,8 +20,8 @@ export function ApiStack({ stack }: StackContext) {
       },
     },
     routes: {
-      "POST /users": "functions/src/create.handler",
-      "POST /movies": "functions/src/create-movie.handler",
+      "POST /users": "functions/src/create-user.handler",
+      "POST /movies/{watchlistId}": "functions/src/add-movie.handler",
       "GET /movies": "functions/src/list-movies.handler",
       "DELETE /movies": "functions/src/delete-movie.handler",
       "GET /users/{username}": "functions/src/get.handler",

@@ -5,7 +5,7 @@ import client from "../core/dynamodb";
 import { nanoid } from "nanoid";
 import type { BffListResponse } from "../core/tmdb/types";
 
-type MovieDetails = BffListResponse[0];
+export type MovieDetails = BffListResponse[0];
 
 export class Movie extends GSIItem {
   id: string;
