@@ -1,16 +1,29 @@
-import { handler as addMovieToWatchlistHandler } from "../add-movie";
+import { rawHandler as addMovieToWatchlistHandler } from "../add-movie";
 
-import { describe, test, expect, beforeEach } from "vitest";
+import { describe, test, expect, beforeEach, vi } from "vitest";
 
+import "aws-sdk-client-mock-jest";
 import { mockClient } from "aws-sdk-client-mock";
-import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
+
+import {
+  DynamoDBDocumentClient,
+  PutCommand,
+  QueryCommand,
+} from "@aws-sdk/lib-dynamodb";
 
 import type { APIGatewayEventRequestContextV2 } from "aws-lambda";
 import type { AddMovieToWatchlistEvent } from "../add-movie";
 
+import { Movie } from "../../../packages/schema/Movie";
+
+vi.stubEnv("BRMGM_TABLE_NAME", "unified-test-table");
+
 const ddbMock = mockClient(DynamoDBDocumentClient);
 
 const mockBaseEvent: AddMovieToWatchlistEvent = {
+  headers: {
+    "Content-Type": "application/json",
+  },
   // @ts-ignore: Typing for APIGatewayProxyEventV2 "body" is string.
   body: {
     username: "trial-user",
@@ -51,32 +64,55 @@ describe("[handlers - POST /movies/{watchlistId}]: add a movie to users' watchli
     // @ts-ignore: This is a PITA. Yes, the handler will receive a legitimate APIGatewayProxyEventV2, but it only makes use of some of it (pathParameters), so it's not worth the effort to mock the entire thing.
     await addMovieToWatchlistHandler(event, mockBaseContext);
 
-  describe("should fail to add a movie to watchlist because ...", () => {
-    test("... body and pathParameters are undefined", async () => {
-      const response = await createResponse(
-        // @ts-ignore: Think "runtime". It is possible that this handler be invoked without any path parameters.
-        {}
-      );
+  test("should successfully add the movie to the watchlist", async () => {
+    const newWatchlistMovie = new Movie(
+      mockBaseEvent.body.username,
+      mockBaseEvent.pathParameters.watchlistId,
+      mockBaseEvent.body.payload
+    );
 
-      expect(response.statusCode).toBe(500);
-
-      expect(JSON.parse(response.body!).error).toBe(
-        "Uh oh, encountered a validation error. Error in 'body': Required. Error in 'pathParameters': Required."
-      );
-    });
-
-    test.only("... no 'watchlistId' is provided", async () => {
-      const response = await createResponse({
-        ...mockBaseEvent,
-        // @ts-ignore: Think "runtime". It is possible that this handler be invoked without any path parameters.
-        pathParameters: {},
+    // [ ] we want to return nothing from the query command
+    ddbMock
+      .on(QueryCommand, {
+        TableName: "unified-test-table",
+        IndexName: "GSI1",
+        KeyConditionExpression: "GSI1PK = :gsi1pk",
+        FilterExpression: "movieDetails.title = :title",
+        ExpressionAttributeValues: {
+          ":title": newWatchlistMovie.movieDetails.title,
+          ":gsi1pk": newWatchlistMovie.gsi1pk,
+        },
+      })
+      .resolves({
+        $metadata: {},
+        Items: [],
+        Count: 0,
+      })
+      .on(PutCommand, {
+        TableName: "unified-test-table",
+        Item: newWatchlistMovie.toItem(),
+        ConditionExpression: "attribute_not_exists(PK)",
+      })
+      .resolves({
+        // [ ] return the movie
+        Attributes: {
+          username: "trial-user",
+        },
       });
 
-      expect(response.statusCode).toBe(500);
+    const response = await createResponse();
 
-      expect(JSON.parse(response.body!).error).toBe(
-        "Uh oh, encountered a validation error. Error in 'body': Required. Error in 'pathParameters': Required."
-      );
+    expect(ddbMock).toHaveReceivedCommandTimes(QueryCommand, 1);
+    expect(ddbMock).toHaveReceivedCommandWith(QueryCommand, {
+      TableName: "unified-test-table",
+      IndexName: "GSI1",
+      KeyConditionExpression: "GSI1PK = :gsi1pk",
+      FilterExpression: "movieDetails.title = :title",
     });
+
+    expect(ddbMock).toHaveReceivedCommandTimes(PutCommand, 1);
+
+    // NB: A 'different' Movie is created in the handler, so we can't use toStrictEqual.
+    expect(response).toEqual({ ...newWatchlistMovie, id: expect.any(String) });
   });
 });

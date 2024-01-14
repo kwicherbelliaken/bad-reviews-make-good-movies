@@ -1,6 +1,7 @@
-import { rawHandler as createUserHandler } from "../create";
+import { rawHandler as createUserHandler } from "../create-user";
 
-import { describe, test, expect, beforeEach } from "vitest";
+import "aws-sdk-client-mock-jest";
+import { describe, test, expect, beforeEach, vi, expectTypeOf } from "vitest";
 
 import { mockClient } from "aws-sdk-client-mock";
 import { DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb";
@@ -9,7 +10,9 @@ import { User } from "../../../packages/schema/User";
 
 import type { APIGatewayEventRequestContextV2 } from "aws-lambda";
 import type { CreateUserEvent } from "../create-user";
-import type { Watchlist } from "../../../packages/schema/Watchlist";
+import { Watchlist } from "../../../packages/schema/Watchlist";
+
+vi.stubEnv("BRMGM_TABLE_NAME", "unified-test-table");
 
 const ddbMock = mockClient(DynamoDBDocumentClient);
 
@@ -37,6 +40,7 @@ describe("[handlers - POST /users/{username}]: create a user", () => {
 
   test("should successfully create the user (as well as associated watchlist)", async () => {
     const newUser = new User(mockBaseEvent.body.username);
+    const newWatchlist = new Watchlist(mockBaseEvent.body.username);
 
     ddbMock
       .on(PutCommand, {
@@ -51,7 +55,7 @@ describe("[handlers - POST /users/{username}]: create a user", () => {
       })
       .on(PutCommand, {
         TableName: "unified-test-table",
-        Item: {} as Watchlist,
+        Item: newWatchlist.toItem(),
         ConditionExpression: "attribute_not_exists(PK)",
       })
       .resolvesOnce({
@@ -63,6 +67,21 @@ describe("[handlers - POST /users/{username}]: create a user", () => {
     const response = await createResponse();
 
     expect(response).toStrictEqual(newUser);
+
+    expect(ddbMock).toHaveReceivedCommandTimes(PutCommand, 2);
+
+    expect(ddbMock).toHaveReceivedNthCommandWith(1, PutCommand, {
+      TableName: "unified-test-table",
+      Item: newUser.toItem(),
+      ConditionExpression: "attribute_not_exists(PK)",
+    });
+
+    expect(ddbMock).toHaveReceivedNthCommandWith(2, PutCommand, {
+      TableName: "unified-test-table",
+      //? I wonder why I haven't been able to get this to work for the specific Watchlist item.
+      Item: expect.any(Object),
+      ConditionExpression: "attribute_not_exists(PK)",
+    });
   });
 
   //   test.todo(

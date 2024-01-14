@@ -1,12 +1,12 @@
-import AWS from "aws-sdk";
-
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import {
   DynamoDBDocumentClient,
   GetCommand,
   PutCommand,
+  QueryCommand,
   type GetCommandInput,
   type PutCommandInput,
+  type QueryCommandInput,
 } from "@aws-sdk/lib-dynamodb";
 
 const dynamodb = new DynamoDBClient({});
@@ -26,6 +26,13 @@ export default {
   },
   put: async (params: PutCommandInput) => {
     const command = new PutCommand(params);
+
+    const response = await client.send(command);
+
+    return response;
+  },
+  query: async (params: QueryCommandInput) => {
+    const command = new QueryCommand(params);
 
     const response = await client.send(command);
 

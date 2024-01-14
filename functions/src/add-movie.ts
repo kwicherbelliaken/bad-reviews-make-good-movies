@@ -3,12 +3,6 @@ import { default as handlerWrapper } from "../../packages/core/handler";
 import { Movie, createMovie } from "../../packages/schema/Movie";
 import type { APIGatewayProxyEventV2 } from "aws-lambda";
 
-//? this is actually 'add movie to watchlist'.
-
-// [ ] create a new lambda
-// [ ] add clerk to resolve username
-// [ ] update dynamo client to support transactions
-
 const payloadSchema = z.object({
   title: z.string(),
   poster_path: z.string(),
@@ -43,23 +37,17 @@ export type AddMovieToWatchlistEvent = Pick<
 > &
   z.infer<typeof eventSchema>;
 
-const validateEvent = (event: AddMovieToWatchlistEvent) =>
-  eventSchema.parse(event);
+export const rawHandler = async (event: AddMovieToWatchlistEvent) => {
+  const {
+    body: { username, payload },
+    pathParameters: { watchlistId },
+  } = event;
 
-export const handler = handlerWrapper<AddMovieToWatchlistEvent, Movie>(
-  async (event) => {
-    const {
-      body: { username, payload },
-      pathParameters: { watchlistId },
-    } = validateEvent(event);
+  const movie = await createMovie(new Movie(username, watchlistId, payload));
 
-    // const movie = await createMovie(new Movie(username, watchlistId, payload));
+  return movie;
+};
 
-    // return movie;
-
-    return {} as Movie;
-  },
-  {
-    httpJsonBodyParserEnabled: true,
-  }
-);
+export const handler = handlerWrapper(rawHandler, eventSchema, {
+  httpJsonBodyParserEnabled: true,
+});

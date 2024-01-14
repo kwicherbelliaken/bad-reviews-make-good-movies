@@ -4,6 +4,7 @@ import { GSIItem } from "./Base";
 import client from "../core/dynamodb";
 import { nanoid } from "nanoid";
 import type { BffListResponse } from "../core/tmdb/types";
+import type { QueryCommandOutput } from "@aws-sdk/lib-dynamodb";
 
 export type MovieDetails = BffListResponse[0];
 
