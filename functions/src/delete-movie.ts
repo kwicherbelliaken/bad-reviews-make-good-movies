@@ -4,7 +4,6 @@ import { deleteMovie } from "../../packages/schema/Movie";
 //! The typing is wonky. I need to attend to it.
 // @ts-ignore
 export const handler = handlerWrapper(async (event) => {
-  console.log("invoked the delete movie handler");
 
   const {
     queryStringParameters: { movieId },

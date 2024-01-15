@@ -13,14 +13,14 @@ const eventSchema = z.object({
 export type GetUserEvent = Pick<APIGatewayProxyEventV2, "pathParameters"> &
   z.infer<typeof eventSchema>;
 
-const validateEvent = (event: GetUserEvent) => eventSchema.parse(event);
-
-export const handler = handlerWrapper<GetUserEvent, User>(async (event) => {
+export const rawHandler = async (event: GetUserEvent): Promise<User> => {
   const {
     pathParameters: { username },
-  } = validateEvent(event);
+  } = event;
 
   const response = await getUser(username);
 
   return response;
-});
+};
+
+export const handler = handlerWrapper(rawHandler, eventSchema);
