@@ -1,33 +1,16 @@
 import { z } from "zod";
 import { default as handlerWrapper } from "../../packages/core/handler";
-import { Movie, createMovie } from "../../packages/schema/Movie";
+import { Movie, createMovie, movieSchema } from "../../packages/schema/Movie";
 import type { APIGatewayProxyEventV2 } from "aws-lambda";
-
-const payloadSchema = z.object({
-  title: z.string(),
-  poster_path: z.string(),
-  overview: z.string(),
-  release_date: z.string(),
-  genres: z.array(
-    z.object({
-      name: z.string(),
-    })
-  ),
-  cast: z.array(
-    z.object({
-      name: z.string(),
-      character: z.string(),
-    })
-  ),
-});
+import { nanoid } from "nanoid";
 
 const eventSchema = z.object({
   body: z.object({
-    username: z.string(),
-    payload: payloadSchema,
+    username: movieSchema.shape.username,
+    payload: movieSchema.shape.movieDetails,
   }),
   pathParameters: z.object({
-    watchlistId: z.string(),
+    watchlistId: movieSchema.shape.watchlistId,
   }),
 });
 
@@ -43,7 +26,9 @@ export const rawHandler = async (event: AddMovieToWatchlistEvent) => {
     pathParameters: { watchlistId },
   } = event;
 
-  const movie = await createMovie(new Movie(username, watchlistId, payload));
+  const movie = await createMovie(
+    new Movie(nanoid(), username, watchlistId, payload)
+  );
 
   return movie;
 };

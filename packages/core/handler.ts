@@ -73,9 +73,9 @@ const handler = <CustomAPIGatewayProxyEvent, LambaResultType>(
 
   middyHandlerWrapper.use(httpHeaderNormalizer());
 
-  middyHandlerWrapper.use(zodValidate(eventSchema));
-
   httpJsonBodyParserEnabled && middyHandlerWrapper.use(httpJsonBodyParser());
+
+  middyHandlerWrapper.use(zodValidate(eventSchema));
 
   middyHandlerWrapper.use(httpErrorHandler());
 

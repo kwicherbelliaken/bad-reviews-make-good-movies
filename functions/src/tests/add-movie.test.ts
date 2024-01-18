@@ -15,6 +15,7 @@ import type { APIGatewayEventRequestContextV2 } from "aws-lambda";
 import type { AddMovieToWatchlistEvent } from "../add-movie";
 
 import { Movie } from "../../../packages/schema/Movie";
+import { nanoid } from "nanoid";
 
 vi.stubEnv("BRMGM_TABLE_NAME", "unified-test-table");
 
@@ -66,6 +67,7 @@ describe("[handlers - POST /movies/{watchlistId}]: add a movie to users' watchli
 
   test("should successfully add the movie to the watchlist", async () => {
     const newWatchlistMovie = new Movie(
+      nanoid(),
       mockBaseEvent.body.username,
       mockBaseEvent.pathParameters.watchlistId,
       mockBaseEvent.body.payload

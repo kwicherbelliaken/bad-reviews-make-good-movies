@@ -2,11 +2,35 @@ import type { DynamoDB } from "aws-sdk";
 import { GSIItem } from "./Base";
 
 import client from "../core/dynamodb";
-import { nanoid } from "nanoid";
 import type { BffListResponse } from "../core/tmdb/types";
-import type { QueryCommandOutput } from "@aws-sdk/lib-dynamodb";
+import { z } from "zod";
 
 export type MovieDetails = BffListResponse[0];
+
+const movieDetailsSchema = z.object({
+  title: z.string(),
+  poster_path: z.string(),
+  overview: z.string(),
+  release_date: z.string(),
+  genres: z.array(
+    z.object({
+      name: z.string(),
+    })
+  ),
+  cast: z.array(
+    z.object({
+      name: z.string(),
+      character: z.string(),
+    })
+  ),
+});
+
+export const movieSchema = z.object({
+  id: z.string(),
+  username: z.string(),
+  watchlistId: z.string(),
+  movieDetails: movieDetailsSchema,
+});
 
 export class Movie extends GSIItem {
   id: string;
@@ -15,30 +39,32 @@ export class Movie extends GSIItem {
   movieDetails: MovieDetails;
 
   constructor(
+    id: string,
     username: string,
     watchlistId: string,
-    movieDetails: MovieDetails,
-    id?: string
+    movieDetails: MovieDetails
   ) {
     super();
-    this.id = id ?? nanoid();
+    this.id = id;
     this.username = username;
     this.watchlistId = watchlistId;
     this.movieDetails = movieDetails;
   }
 
   static fromItem(item?: DynamoDB.DocumentClient.AttributeMap): Movie {
-    if (!item) throw new Error("No item!");
-    if (item.username == null) throw new Error("No username!");
-    if (item.watchlistId == null) throw new Error("No watchlistId!");
-    if (item.movieDetails == null) throw new Error("No movieDetails!");
+    if (!item) throw new Error("No Movie item resolved!");
 
-    return new Movie(
-      item.username,
-      item.watchlistId,
-      item.movieDetails,
-      item.id
-    );
+    try {
+      movieSchema.parse(item);
+
+      const { id, username, watchlistId, movieDetails } = item;
+
+      return new Movie(id, username, watchlistId, movieDetails);
+    } catch (error) {
+      throw new Error(
+        `There was an error resolving Movie from DynamoDB: ${error}`
+      );
+    }
   }
 
   get pk(): string {
