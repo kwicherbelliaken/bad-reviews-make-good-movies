@@ -4,9 +4,11 @@ import {
   GetCommand,
   PutCommand,
   QueryCommand,
+  DeleteCommand,
   type GetCommandInput,
   type PutCommandInput,
   type QueryCommandInput,
+  type DeleteCommandInput,
 } from "@aws-sdk/lib-dynamodb";
 
 const dynamodb = new DynamoDBClient({});
@@ -33,6 +35,13 @@ export default {
   },
   query: async (params: QueryCommandInput) => {
     const command = new QueryCommand(params);
+
+    const response = await client.send(command);
+
+    return response;
+  },
+  delete: async (params: DeleteCommandInput) => {
+    const command = new DeleteCommand(params);
 
     const response = await client.send(command);
 
