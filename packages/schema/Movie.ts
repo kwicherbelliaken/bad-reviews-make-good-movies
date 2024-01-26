@@ -147,5 +147,5 @@ export const createMovie = async (movie: Movie): Promise<Movie> => {
 export const isMovie = (
   item: DynamoDB.DocumentClient.AttributeMap
 ): item is Movie => {
-  return item.PK.startsWith("MOVIE#");
+  return item.pk.startsWith("MOVIE#");
 };

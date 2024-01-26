@@ -1,3 +1,4 @@
+import type { APIGatewayProxyEventV2 } from "aws-lambda";
 import { default as handlerWrapper } from "../../packages/core/handler";
 
 import tmdb from "../../packages/core/tmdb/tmdb";
@@ -5,25 +6,31 @@ import {
   Watchlist,
   findMovieInWatchlist,
 } from "../../packages/schema/Watchlist";
+import { z } from "zod";
 
-//! The typing is wonky. I need to attend to it.
-// @ts-ignore
-export const handler = handlerWrapper(async (event) => {
+const eventSchema = z.object({
+  queryStringParameters: z.object({
+    title: z.string(),
+  }),
+});
+
+export type SearchMoviesEvent = Pick<
+  APIGatewayProxyEventV2,
+  "queryStringParameters"
+> &
+  z.infer<typeof eventSchema>;
+
+export const rawHandler = async (event: SearchMoviesEvent) => {
   const {
     queryStringParameters: { title },
   } = event;
-
-  // [ ] support authenticated sessions and resolving user data some other way
-  //! to be honest, I think the better version of this would be to resolve the current user server side
-  //! so, like, support authenticated sessions because otherwise I have to repeatedly pass "session" data over the wire
-  //! so, this shit below remains hardcoded until I sort that out
 
   const movieInWatchlist = await findMovieInWatchlist(
     title,
     new Watchlist("trial-user", "8JWw9ZPsUtkD-14h0Fnzs")
   );
 
-  const searchedMovies = await tmdb.bffEndpoints.list(title);
+  let searchedMovies = await tmdb.bffEndpoints.list(title);
 
   if (movieInWatchlist.length > 0) {
     console.info(
@@ -36,4 +43,6 @@ export const handler = handlerWrapper(async (event) => {
   }
 
   return searchedMovies;
-});
+};
+
+export const handler = handlerWrapper(rawHandler, eventSchema);
