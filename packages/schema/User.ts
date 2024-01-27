@@ -3,6 +3,7 @@ import { Item } from "./Base";
 
 import client from "../core/dynamodb";
 import { Watchlist } from "./Watchlist";
+import { nanoid } from "nanoid";
 
 export class User extends Item {
   username: string;
@@ -45,7 +46,7 @@ export const createUser = async (user: User): Promise<User> => {
       }),
       client.put({
         TableName: process.env.BRMGM_TABLE_NAME!,
-        Item: new Watchlist(user.username).toItem(),
+        Item: new Watchlist(nanoid(), user.username).toItem(),
         ConditionExpression: "attribute_not_exists(PK)",
       }),
     ]);

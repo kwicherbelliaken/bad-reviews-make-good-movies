@@ -27,7 +27,7 @@ export const rawHandler = async (event: SearchMoviesEvent) => {
 
   const movieInWatchlist = await findMovieInWatchlist(
     title,
-    new Watchlist("trial-user", "8JWw9ZPsUtkD-14h0Fnzs")
+    new Watchlist("8JWw9ZPsUtkD-14h0Fnzs", "trial-user")
   );
 
   let searchedMovies = await tmdb.bffEndpoints.list(title);

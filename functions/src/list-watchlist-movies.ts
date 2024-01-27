@@ -1,15 +1,18 @@
+import { z } from "zod";
 import { default as handlerWrapper } from "../../packages/core/handler";
 import { Watchlist, getWatchlistMovies } from "../../packages/schema/Watchlist";
+import type { APIGatewayEventRequestContextV2 } from "aws-lambda";
 
-//! The typing is wonky. I need to attend to it.
-// @ts-ignore
-export const handler = handlerWrapper(async (event) => {
-  const response = await getWatchlistMovies(
-    new Watchlist(
-      event.pathParameters?.username!,
-      event.pathParameters?.watchlistId!
-    )
-  );
+const eventSchema = z.object({});
+
+export type ListWatchlistMoviesEvent = z.infer<typeof eventSchema>;
+
+export const watchlist = new Watchlist("8JWw9ZPsUtkD-14h0Fnzs", "trial-user");
+
+export const rawHandler = async (event: ListWatchlistMoviesEvent) => {
+  const response = await getWatchlistMovies(watchlist);
 
   return response;
-});
+};
+
+export const handler = handlerWrapper(rawHandler, eventSchema);

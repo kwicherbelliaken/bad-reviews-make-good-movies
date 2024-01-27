@@ -44,7 +44,7 @@ const mockBaseEvent: SearchMoviesEvent = {
 // @ts-ignore: I don't use this currently. So, why mock it?
 const mockBaseContext: APIGatewayEventRequestContextV2 = {};
 
-const mockWatchlist = new Watchlist("trial-user", "8JWw9ZPsUtkD-14h0Fnzs");
+const mockWatchlist = new Watchlist("8JWw9ZPsUtkD-14h0Fnzs", "trial-user");
 
 describe("[handlers - GET /movies]: search for movies", () => {
   beforeEach(() => {

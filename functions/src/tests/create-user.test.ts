@@ -11,6 +11,7 @@ import { User } from "../../../packages/schema/User";
 import type { APIGatewayEventRequestContextV2 } from "aws-lambda";
 import type { CreateUserEvent } from "../create-user";
 import { Watchlist } from "../../../packages/schema/Watchlist";
+import { nanoid } from "nanoid";
 
 vi.stubEnv("BRMGM_TABLE_NAME", "unified-test-table");
 
@@ -40,7 +41,7 @@ describe("[handlers - POST /users/{username}]: create a user", () => {
 
   test("should successfully create the user (as well as associated watchlist)", async () => {
     const newUser = new User(mockBaseEvent.body.username);
-    const newWatchlist = new Watchlist(mockBaseEvent.body.username);
+    const newWatchlist = new Watchlist(nanoid(), mockBaseEvent.body.username);
 
     ddbMock
       .on(PutCommand, {

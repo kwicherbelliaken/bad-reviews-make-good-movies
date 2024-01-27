@@ -2,7 +2,6 @@ import type { DynamoDB } from "aws-sdk";
 import { GSIItem } from "./Base";
 
 import client from "../core/dynamodb";
-import { nanoid } from "nanoid";
 import { Movie, isMovie } from "./Movie";
 
 // [ ]: add support for a 'created date'
@@ -14,9 +13,9 @@ export class Watchlist extends GSIItem {
   username: string;
   createdDate: string;
 
-  constructor(username: string, id?: string) {
+  constructor(id: string, username: string) {
     super();
-    this.id = id ?? nanoid();
+    this.id = id;
     this.username = username;
     this.createdDate = new Date().toISOString();
   }
@@ -25,7 +24,7 @@ export class Watchlist extends GSIItem {
     if (!item) throw new Error("No item!");
     if (item.username == null) throw new Error("No username!");
 
-    return new Watchlist(item.username);
+    return new Watchlist(item.id, item.username);
   }
 
   get pk(): string {
