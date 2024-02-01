@@ -3,7 +3,7 @@ import { Item } from "./Base";
 
 import client from "../core/dynamodb";
 import { Watchlist } from "./Watchlist";
-
+import { nanoid } from "nanoid";
 
 export class User extends Item {
   username: string;
@@ -42,17 +42,21 @@ export const createUser = async (user: User): Promise<User> => {
       client.put({
         TableName: process.env.BRMGM_TABLE_NAME!,
         Item: user.toItem(),
-        ConditionExpression: "attribute_not_exists(PK)",
+        ConditionExpression: "attribute_not_exists(pk)",
       }),
       client.put({
         TableName: process.env.BRMGM_TABLE_NAME!,
-        Item: new Watchlist(user.username).toItem(),
-        ConditionExpression: "attribute_not_exists(PK)",
+        Item: new Watchlist(nanoid(), user.username).toItem(),
+        ConditionExpression: "attribute_not_exists(pk)",
       }),
     ]);
 
     return user;
   } catch (error) {
+    // [ ] improve the error handling, this happened when trying to add a user of the same username.
+    // {
+    //   "error": "The conditional request failed"
+    // }
     console.log(error);
     throw error;
   }

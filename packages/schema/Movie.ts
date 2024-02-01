@@ -2,10 +2,35 @@ import type { DynamoDB } from "aws-sdk";
 import { GSIItem } from "./Base";
 
 import client from "../core/dynamodb";
-import { nanoid } from "nanoid";
 import type { BffListResponse } from "../core/tmdb/types";
+import { z } from "zod";
 
-type MovieDetails = BffListResponse[0];
+export type MovieDetails = BffListResponse[0];
+
+const movieDetailsSchema = z.object({
+  title: z.string(),
+  poster_path: z.string(),
+  overview: z.string(),
+  release_date: z.string(),
+  genres: z.array(
+    z.object({
+      name: z.string(),
+    })
+  ),
+  cast: z.array(
+    z.object({
+      name: z.string(),
+      character: z.string(),
+    })
+  ),
+});
+
+export const movieSchema = z.object({
+  id: z.string(),
+  username: z.string(),
+  watchlistId: z.string(),
+  movieDetails: movieDetailsSchema,
+});
 
 export class Movie extends GSIItem {
   id: string;
@@ -14,30 +39,32 @@ export class Movie extends GSIItem {
   movieDetails: MovieDetails;
 
   constructor(
+    id: string,
     username: string,
     watchlistId: string,
-    movieDetails: MovieDetails,
-    id?: string
+    movieDetails: MovieDetails
   ) {
     super();
-    this.id = id ?? nanoid();
+    this.id = id;
     this.username = username;
     this.watchlistId = watchlistId;
     this.movieDetails = movieDetails;
   }
 
   static fromItem(item?: DynamoDB.DocumentClient.AttributeMap): Movie {
-    if (!item) throw new Error("No item!");
-    if (item.username == null) throw new Error("No username!");
-    if (item.watchlistId == null) throw new Error("No watchlistId!");
-    if (item.movieDetails == null) throw new Error("No movieDetails!");
+    if (!item) throw new Error("No Movie item resolved!");
 
-    return new Movie(
-      item.username,
-      item.watchlistId,
-      item.movieDetails,
-      item.id
-    );
+    try {
+      movieSchema.parse(item);
+
+      const { id, username, watchlistId, movieDetails } = item;
+
+      return new Movie(id, username, watchlistId, movieDetails);
+    } catch (error) {
+      throw new Error(
+        `There was an error resolving Movie from DynamoDB: ${error}`
+      );
+    }
   }
 
   get pk(): string {
@@ -75,8 +102,8 @@ export const deleteMovie = async (movieId: string) => {
     await client.delete({
       TableName: process.env.BRMGM_TABLE_NAME!,
       Key: {
-        PK: `MOVIE#${movieId}`,
-        SK: `MOVIE#${movieId}`,
+        pk: `MOVIE#${movieId}`,
+        sk: `MOVIE#${movieId}`,
       },
     });
   } catch (error) {
@@ -90,7 +117,7 @@ export const createMovie = async (movie: Movie): Promise<Movie> => {
     const existingMovieEntry = await client.query({
       TableName: process.env.BRMGM_TABLE_NAME!,
       IndexName: "GSI1",
-      KeyConditionExpression: "GSI1PK = :gsi1pk",
+      KeyConditionExpression: "gsi1pk = :gsi1pk",
       FilterExpression: "movieDetails.title = :title",
       ExpressionAttributeValues: {
         ":title": movie.movieDetails.title,
@@ -120,5 +147,5 @@ export const createMovie = async (movie: Movie): Promise<Movie> => {
 export const isMovie = (
   item: DynamoDB.DocumentClient.AttributeMap
 ): item is Movie => {
-  return item.PK.startsWith("MOVIE#");
+  return item.pk.startsWith("MOVIE#");
 };

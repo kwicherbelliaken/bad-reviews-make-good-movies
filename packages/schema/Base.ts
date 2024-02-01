@@ -6,8 +6,8 @@ export abstract class Item {
 
   public keys(): DynamoDB.DocumentClient.Key {
     return {
-      PK: this.pk,
-      SK: this.sk,
+      pk: this.pk,
+      sk: this.sk,
     };
   }
 
@@ -20,8 +20,8 @@ export abstract class GSIItem extends Item {
 
   public gsiKeys(): DynamoDB.DocumentClient.Key {
     return {
-      GSI1PK: this.gsi1pk,
-      GSI1SK: this.gsi1sk,
+      gsi1pk: this.gsi1pk,
+      gsi1sk: this.gsi1sk,
     };
   }
 }
