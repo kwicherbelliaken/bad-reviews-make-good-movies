@@ -42,12 +42,12 @@ export const createUser = async (user: User): Promise<User> => {
       client.put({
         TableName: process.env.BRMGM_TABLE_NAME!,
         Item: user.toItem(),
-        ConditionExpression: "attribute_not_exists(PK)",
+        ConditionExpression: "attribute_not_exists(pk)",
       }),
       client.put({
         TableName: process.env.BRMGM_TABLE_NAME!,
         Item: new Watchlist(nanoid(), user.username).toItem(),
-        ConditionExpression: "attribute_not_exists(PK)",
+        ConditionExpression: "attribute_not_exists(pk)",
       }),
     ]);
 

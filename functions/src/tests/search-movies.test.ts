@@ -72,7 +72,7 @@ describe("[handlers - GET /movies]: search for movies", () => {
     expect(ddbMock).toHaveReceivedCommandWith(QueryCommand, {
       TableName: "unified-test-table",
       IndexName: "GSI1",
-      KeyConditionExpression: "GSI1PK = :gsi1pk",
+      KeyConditionExpression: "gsi1pk = :gsi1pk",
       FilterExpression: "movieDetails.title = :title",
       ExpressionAttributeValues: {
         ":gsi1pk": mockWatchlist.gsi1pk,

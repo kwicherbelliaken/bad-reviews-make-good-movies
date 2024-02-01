@@ -6,7 +6,7 @@ import { Movie, isMovie } from "./Movie";
 
 // [ ]: add support for a 'created date'
 // [ ]: add support for an 'updated date'
-// [ ]: write in a GSI1PK that extends to the user
+// [ ]: write in a gsi1pk that extends to the user
 
 export class Watchlist extends GSIItem {
   id: string;
@@ -61,7 +61,7 @@ export const createWatchlist = async (
     await client.put({
       TableName: process.env.BRMGM_TABLE_NAME!,
       Item: watchlist.toItem(),
-      ConditionExpression: "attribute_not_exists(PK)",
+      ConditionExpression: "attribute_not_exists(pk)",
     });
 
     return watchlist;
@@ -78,7 +78,7 @@ export const getWatchlistMovies = async (
     const result = await client.query({
       TableName: process.env.BRMGM_TABLE_NAME!,
       IndexName: "GSI1",
-      KeyConditionExpression: "GSI1PK = :gsi1pk",
+      KeyConditionExpression: "gsi1pk = :gsi1pk",
       ExpressionAttributeValues: {
         ":gsi1pk": watchlist.gsi1pk,
       },
@@ -107,7 +107,7 @@ export const findMovieInWatchlist = async (
     const result = await client.query({
       TableName: process.env.BRMGM_TABLE_NAME!,
       IndexName: "GSI1",
-      KeyConditionExpression: "GSI1PK = :gsi1pk",
+      KeyConditionExpression: "gsi1pk = :gsi1pk",
       FilterExpression: "movieDetails.title = :title",
       ExpressionAttributeValues: {
         ":gsi1pk": watchlist.gsi1pk,

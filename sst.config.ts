@@ -1,5 +1,5 @@
 import type { SSTConfig } from "sst";
-import { AstroSite, StackContext, use } from "sst/constructs";
+import { AstroSite, use, type StackContext } from "sst/constructs";
 import { StorageStack } from "./stacks/StorageStack";
 import { ApiStack } from "./stacks/ApiStack";
 

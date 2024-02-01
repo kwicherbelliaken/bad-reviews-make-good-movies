@@ -58,8 +58,8 @@ describe("[handlers - DELETE /movies/{watchlistId}]: remove a movie from a users
       .on(DeleteCommand, {
         TableName: "unified-test-table",
         Key: {
-          PK: mockMovieToBeDeleted.pk,
-          SK: mockMovieToBeDeleted.sk,
+          pk: mockMovieToBeDeleted.pk,
+          sk: mockMovieToBeDeleted.sk,
         },
       })
       .resolves({});
@@ -70,8 +70,8 @@ describe("[handlers - DELETE /movies/{watchlistId}]: remove a movie from a users
     expect(ddbMock).toHaveReceivedCommandWith(DeleteCommand, {
       TableName: "unified-test-table",
       Key: {
-        PK: mockMovieToBeDeleted.pk,
-        SK: mockMovieToBeDeleted.sk,
+        pk: mockMovieToBeDeleted.pk,
+        sk: mockMovieToBeDeleted.sk,
       },
     });
   });
@@ -81,8 +81,8 @@ describe("[handlers - DELETE /movies/{watchlistId}]: remove a movie from a users
       .on(DeleteCommand, {
         TableName: "unified-test-table",
         Key: {
-          PK: mockMovieToBeDeleted.pk,
-          SK: mockMovieToBeDeleted.sk,
+          pk: mockMovieToBeDeleted.pk,
+          sk: mockMovieToBeDeleted.sk,
         },
       })
       .rejects(

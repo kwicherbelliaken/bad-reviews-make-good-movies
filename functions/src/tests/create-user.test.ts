@@ -47,7 +47,7 @@ describe("[handlers - POST /users/{username}]: create a user", () => {
       .on(PutCommand, {
         TableName: "unified-test-table",
         Item: newUser.toItem(),
-        ConditionExpression: "attribute_not_exists(PK)",
+        ConditionExpression: "attribute_not_exists(pk)",
       })
       .resolvesOnce({
         Attributes: {
@@ -57,7 +57,7 @@ describe("[handlers - POST /users/{username}]: create a user", () => {
       .on(PutCommand, {
         TableName: "unified-test-table",
         Item: newWatchlist.toItem(),
-        ConditionExpression: "attribute_not_exists(PK)",
+        ConditionExpression: "attribute_not_exists(pk)",
       })
       .resolvesOnce({
         Attributes: {
@@ -74,14 +74,14 @@ describe("[handlers - POST /users/{username}]: create a user", () => {
     expect(ddbMock).toHaveReceivedNthCommandWith(1, PutCommand, {
       TableName: "unified-test-table",
       Item: newUser.toItem(),
-      ConditionExpression: "attribute_not_exists(PK)",
+      ConditionExpression: "attribute_not_exists(pk)",
     });
 
     expect(ddbMock).toHaveReceivedNthCommandWith(2, PutCommand, {
       TableName: "unified-test-table",
       //? I wonder why I haven't been able to get this to work for the specific Watchlist item.
       Item: expect.any(Object),
-      ConditionExpression: "attribute_not_exists(PK)",
+      ConditionExpression: "attribute_not_exists(pk)",
     });
   });
 

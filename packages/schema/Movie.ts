@@ -102,8 +102,8 @@ export const deleteMovie = async (movieId: string) => {
     await client.delete({
       TableName: process.env.BRMGM_TABLE_NAME!,
       Key: {
-        PK: `MOVIE#${movieId}`,
-        SK: `MOVIE#${movieId}`,
+        pk: `MOVIE#${movieId}`,
+        sk: `MOVIE#${movieId}`,
       },
     });
   } catch (error) {
@@ -117,7 +117,7 @@ export const createMovie = async (movie: Movie): Promise<Movie> => {
     const existingMovieEntry = await client.query({
       TableName: process.env.BRMGM_TABLE_NAME!,
       IndexName: "GSI1",
-      KeyConditionExpression: "GSI1PK = :gsi1pk",
+      KeyConditionExpression: "gsi1pk = :gsi1pk",
       FilterExpression: "movieDetails.title = :title",
       ExpressionAttributeValues: {
         ":title": movie.movieDetails.title,

@@ -5,14 +5,14 @@ import { type StackContext, Table } from "sst/constructs";
 export function StorageStack({ stack }: StackContext) {
   const brmgmTable = new Table(stack, "BRMGMTable", {
     fields: {
-      PK: "string",
-      SK: "string",
-      GSI1PK: "string",
-      GSI1SK: "string",
+      pk: "string",
+      sk: "string",
+      gsi1pk: "string",
+      gsi1sk: "string",
     },
-    primaryIndex: { partitionKey: "PK", sortKey: "SK" },
+    primaryIndex: { partitionKey: "pk", sortKey: "sk" },
     globalIndexes: {
-      GSI1: { partitionKey: "GSI1PK", sortKey: "GSI1SK", projection: "all" },
+      GSI1: { partitionKey: "gsi1pk", sortKey: "gsi1sk", projection: "all" },
     },
   });
 

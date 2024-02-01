@@ -41,8 +41,8 @@ describe("[handlers - GET /users/{username}]: get a user", () => {
       })
       .resolves({
         Item: {
-          PK: "USER#trial-user",
-          SK: "USER#trial-user",
+          pk: "USER#trial-user",
+          sk: "USER#trial-user",
           username: "trial-user",
         },
       });

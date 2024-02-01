@@ -78,7 +78,7 @@ describe("[handlers - POST /movies/{watchlistId}]: add a movie to users' watchli
       .on(QueryCommand, {
         TableName: "unified-test-table",
         IndexName: "GSI1",
-        KeyConditionExpression: "GSI1PK = :gsi1pk",
+        KeyConditionExpression: "gsi1pk = :gsi1pk",
         FilterExpression: "movieDetails.title = :title",
         ExpressionAttributeValues: {
           ":title": newWatchlistMovie.movieDetails.title,
@@ -93,7 +93,7 @@ describe("[handlers - POST /movies/{watchlistId}]: add a movie to users' watchli
       .on(PutCommand, {
         TableName: "unified-test-table",
         Item: newWatchlistMovie.toItem(),
-        ConditionExpression: "attribute_not_exists(PK)",
+        ConditionExpression: "attribute_not_exists(pk)",
       })
       .resolves({
         // [ ] return the movie
@@ -108,7 +108,7 @@ describe("[handlers - POST /movies/{watchlistId}]: add a movie to users' watchli
     expect(ddbMock).toHaveReceivedCommandWith(QueryCommand, {
       TableName: "unified-test-table",
       IndexName: "GSI1",
-      KeyConditionExpression: "GSI1PK = :gsi1pk",
+      KeyConditionExpression: "gsi1pk = :gsi1pk",
       FilterExpression: "movieDetails.title = :title",
     });
 
