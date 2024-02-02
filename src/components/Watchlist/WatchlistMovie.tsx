@@ -7,6 +7,9 @@ import { LoadingSpinner } from "../LoadingSpinner/LoadingSpinner";
 
 import type { Movie } from "../../../packages/schema/Movie";
 
+const TMDB_API_ENDPOINT =
+  "https://ivckka64fd.execute-api.ap-southeast-2.amazonaws.com";
+
 interface WatchlistMovieProps {
   movie: Movie;
 }
@@ -16,7 +19,7 @@ const getWatchlistMovieImage = async (posterPath: string) => {
   const height = 750;
 
   const response = await fetch(
-    `https://dz76rj93fd.execute-api.ap-southeast-2.amazonaws.com/image?fileSize=w${width}&posterPath=${posterPath}`,
+    `${TMDB_API_ENDPOINT}/image?fileSize=w${width}&posterPath=${posterPath}`,
     {
       method: "GET",
       headers: {
