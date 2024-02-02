@@ -12,11 +12,7 @@ const movieDetailsSchema = z.object({
   poster_path: z.string(),
   overview: z.string(),
   release_date: z.string(),
-  genres: z.array(
-    z.object({
-      name: z.string(),
-    })
-  ),
+  genres: z.array(z.string()),
   cast: z.array(
     z.object({
       name: z.string(),
