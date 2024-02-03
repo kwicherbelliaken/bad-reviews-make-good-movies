@@ -1,13 +1,11 @@
 import {
   rawHandler as getMoviePosterUrl,
   type GetMoviePosterEvent,
-} from "../image";
+} from "../get-movie-poster-url";
 
 import fetch from "node-fetch";
 
 import { describe, test, expect, vi, beforeEach } from "vitest";
-
-import type { APIGatewayEventRequestContextV2 } from "aws-lambda";
 
 vi.mock("node-fetch");
 
@@ -18,17 +16,13 @@ const mockBaseEvent: GetMoviePosterEvent = {
   },
 };
 
-// @ts-ignore: I don't use this currently. So, why mock it?
-const mockBaseContext: APIGatewayEventRequestContextV2 = {};
-
 describe("[handlers - GET /users/{username}]: get a user", () => {
   beforeEach(() => {
     vi.resetAllMocks();
   });
 
   const getResponse = async (event: GetMoviePosterEvent = mockBaseEvent) =>
-    // @ts-ignore: This is a PITA. Yes, the handler will receive a legitimate APIGatewayProxyEventV2, but it only makes use of some of it (pathParameters), so it's not worth the effort to mock the entire thing.
-    await getMoviePosterUrl(event, mockBaseContext);
+    await getMoviePosterUrl(event);
 
   test("should successfully return a url for a movie poster image", async () => {
     const mockConfigurationResponse = {
@@ -40,7 +34,7 @@ describe("[handlers - GET /users/{username}]: get a user", () => {
 
     const mockExpectedMoviePosterUrl = `${mockConfigurationResponse.images.base_url}/t/p/${mockBaseEvent.queryStringParameters.fileSize}/${mockBaseEvent.queryStringParameters.posterPath}`;
 
-    vi.mocked(fetch).mockResolvedValueOnce({
+    vi.mocked(fetch, { partial: true }).mockResolvedValueOnce({
       json: () => Promise.resolve(mockConfigurationResponse),
     });
 
