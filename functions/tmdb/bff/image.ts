@@ -1,13 +1,31 @@
+import type { APIGatewayProxyEventV2 } from "aws-lambda";
 import { default as handlerWrapper } from "../../../packages/core/handler";
 import tmdb from "../../../packages/core/tmdb/tmdb";
+import { z } from "zod";
 
-//! The typing is wonky. I need to attend to it.
-// @ts-ignore
-export const handler = handlerWrapper(async (event) => {
-  const response = await tmdb.bffEndpoints.image(
-    event.queryStringParameters?.fileSize!,
-    event.queryStringParameters?.posterPath!
-  );
+const eventSchema = z.object({
+  queryStringParameters: z.object({
+    fileSize: z.custom<`w${string}`>((val) =>
+      /^\d+\.\d+\.\d+$/g.test(val as string)
+    ),
+    posterPath: z.string(),
+  }),
+});
+
+export type GetMoviePosterEvent = Pick<
+  APIGatewayProxyEventV2,
+  "queryStringParameters"
+> &
+  z.infer<typeof eventSchema>;
+
+export const rawHandler = async (event: GetMoviePosterEvent) => {
+  const {
+    queryStringParameters: { fileSize, posterPath },
+  } = event;
+
+  const response = await tmdb.bffEndpoints.image(fileSize, posterPath);
 
   return response;
-});
+};
+
+export const handler = handlerWrapper(rawHandler, eventSchema);
