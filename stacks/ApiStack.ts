@@ -43,7 +43,7 @@ export function ApiStack({ stack }: StackContext) {
     },
     routes: {
       "GET /search": "functions/tmdb/bff/list.handler",
-      "GET /image": "functions/tmdb/bff/image.handler",
+      "GET /image": "functions/tmdb/bff/get-movie-poster-url.handler",
     },
   });
 
