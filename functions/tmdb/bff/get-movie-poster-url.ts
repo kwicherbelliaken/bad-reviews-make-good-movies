@@ -6,7 +6,7 @@ import { z } from "zod";
 const eventSchema = z.object({
   queryStringParameters: z.object({
     fileSize: z.custom<`w${string}`>((val) =>
-      /^\d+\.\d+\.\d+$/g.test(val as string)
+      /^[a-z]\d{3}$/g.test(val as string)
     ),
     posterPath: z.string(),
   }),
