@@ -16,7 +16,7 @@ const removeFromWatchlist = async (movieId: string) => {
   });
 
   const response = await fetch(
-    "https://hh2877m7a0.execute-api.ap-southeast-2.amazonaws.com/movies?" +
+    "https://97ogx4wg9c.execute-api.ap-southeast-2.amazonaws.com/movies?" +
       queryParams,
     {
       method: "DELETE",
