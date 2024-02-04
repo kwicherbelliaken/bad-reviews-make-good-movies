@@ -4,12 +4,14 @@ import { queryClient } from "../../query";
 
 const addMovieToWatchlist = async (payload: any) => {
   const response = await fetch(
-    "https://hh2877m7a0.execute-api.ap-southeast-2.amazonaws.com/movies",
+    "https://97ogx4wg9c.execute-api.ap-southeast-2.amazonaws.com/movies/8JWw9ZPsUtkD-14h0Fnzs",
     {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         username: "trial-user",
-        watchlistId: "8JWw9ZPsUtkD-14h0Fnzs",
         payload,
       }),
     }

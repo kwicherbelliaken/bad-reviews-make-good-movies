@@ -121,7 +121,7 @@ export type ConfigurationDetails = {
 export type BffListResponse = Array<
   Pick<Movie, "title" | "release_date" | "overview" | "poster_path"> & {
     cast: Array<Pick<Cast, "name" | "character">>;
-    genres: Array<Pick<Genre, "name">>;
+    genres: Array<Genre["name"]>;
   }
 >;
 
