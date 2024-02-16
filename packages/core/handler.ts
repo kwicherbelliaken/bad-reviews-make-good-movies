@@ -30,6 +30,10 @@ const _reportError = (message: string) => {
   console.error(message);
 };
 
+const getStatusCode = (requestContext: any) => {
+  return requestContext?.http?.method === "DELETE" ? 204 : 200;
+};
+
 /**
  * As well as allowing us to centrally handle any errors that occur in our lambda functions, this wrapper also allows us to attach middy middlewares to our lambdas.
  * @returns HTTP response (our lambdas handle API endpoints).
@@ -53,7 +57,7 @@ const handler = <CustomAPIGatewayProxyEvent, LambaResultType>(
       try {
         // [ ] I don't like the casting here
         body = await lambda(event as CustomAPIGatewayProxyEvent, context);
-        statusCode = 200;
+        statusCode = getStatusCode(event?.requestContext);
       } catch (e) {
         const errorMessage = getErrorMessage(e);
         _reportError(errorMessage);

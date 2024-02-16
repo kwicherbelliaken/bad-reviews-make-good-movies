@@ -44,6 +44,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@total-typescript/ts-reset": "^0.5.1",
     "@types/aws-lambda": "^8.10.131",
     "@types/http-errors": "^2.0.4",
     "@types/jest": "^29.5.10",

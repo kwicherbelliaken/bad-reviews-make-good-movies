@@ -23,12 +23,16 @@ const removeFromWatchlist = async (movieId: string) => {
     }
   );
 
-  if (response.status !== 200 || !response.ok) {
+  type JSONResponse = {
+    error: string;
+  };
+
+  if (response.status !== 204 || !response.ok) {
     // NB: Critically important to actually read the response body. If we don't
     // Node Fetch leaks connections: https://github.com/node-fetch/node-fetch/issues/499
-    const body = await response.json();
+    const { error }: JSONResponse = (await response.json()) as JSONResponse;
 
-    throw new Error(body.error);
+    throw new Error(error);
   }
 };
 
