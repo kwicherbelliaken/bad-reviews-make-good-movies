@@ -2,6 +2,7 @@ import type { SSTConfig } from "sst";
 import { AstroSite, use, type StackContext } from "sst/constructs";
 import { StorageStack } from "./stacks/StorageStack";
 import { ApiStack } from "./stacks/ApiStack";
+import { IAMStack } from "./stacks/IAMStack";
 
 export default {
   config(_input) {
@@ -17,6 +18,7 @@ export default {
     }
 
     app
+      .stack(IAMStack)
       .stack(StorageStack)
       .stack(ApiStack)
       .stack(function Site({ stack }: StackContext) {
