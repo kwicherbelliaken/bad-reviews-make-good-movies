@@ -12,7 +12,7 @@ export default {
   },
   stacks(app) {
     // remove all resources when non-prod stages are removed
-    if (app.stage !== "prod") {
+    if (app.stage !== "production") {
       app.setDefaultRemovalPolicy("destroy");
     }
 
