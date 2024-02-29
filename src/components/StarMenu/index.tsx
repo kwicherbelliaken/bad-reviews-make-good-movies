@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 
+const StarMenuLayout = ({ children }) => {
+  return <div className="relative h-[calc(100%-96px)]">{children}</div>;
+};
+
 const StarMenu = () => {
   const [showAnimation, setShowAnimation] = useState(false);
 
@@ -107,18 +111,19 @@ const StarMenu = () => {
     </>
   );
 
-  //? use this when testing
-  // return <>{StarAnimation}</>;
+  //! NB: the height calculation is based on height of the Header ("96px") and ensures that there is no weird scrolling behaviour.
+  //! NB: Use this when testing.
+  // return <StarMenuLayout>{StarAnimation}</StarMenuLayout>;
 
   if (showAnimation) {
-    return <>{StarAnimation}</>;
+    return <StarMenuLayout>{StarAnimation}</StarMenuLayout>;
   }
 
   return (
-    <>
+    <StarMenuLayout>
       {StarAnimationStatic}
       {StarAnimationTouchzone}
-    </>
+    </StarMenuLayout>
   );
 };
 
