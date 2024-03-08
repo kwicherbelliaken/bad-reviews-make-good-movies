@@ -56,21 +56,18 @@ export const WatchlistMovie = ({ movie }: WatchlistMovieProps) => {
   }
 
   return (
-    <div className="flex bg-grey-50 justify-between rounded-lg border p-4 gap-4">
-      <div className="flex justify-center w-[50%]">
+    <div className="flex flex-wrap bg-grey-50 rounded-lg border p-4 gap-4 [&>div]:flex-grow basis-64">
+      <div className="flex outline outline-green-200">
         <MoviePoster imageUrl={imageUrl} />
       </div>
-      <div className="flex-col w-[50%] relative">
+
+      <div className="outline outline-red-200 w-96">
         <RemoveWatchlist movieId={movie.id} />
-
         <h1>{movie.movieDetails.title}</h1>
-
         <h2 className="font-afterAllBoldSerif font-bold text-2xl tracking-wide">
           {movie.movieDetails.release_date}
         </h2>
-
         <p className="indent-7">{movie.movieDetails.overview}</p>
-
         <div className="py-10">
           {(movie.movieDetails.cast ?? []).map((cast) => (
             <p className="indent-7" key={`${cast.name} as ${cast.character}`}>
@@ -78,7 +75,6 @@ export const WatchlistMovie = ({ movie }: WatchlistMovieProps) => {
             </p>
           ))}
         </div>
-
         {movie.movieDetails.genres.length > 0 && (
           <div className="border-t-[1px] border-b-[1px] border-black flex flex-row gap-4 justify-center py-6">
             {movie.movieDetails.genres.map((genre) => (
@@ -90,4 +86,40 @@ export const WatchlistMovie = ({ movie }: WatchlistMovieProps) => {
       </div>
     </div>
   );
+
+  // return (
+  //   <div className="flex bg-grey-50 justify-between rounded-lg border p-4 gap-4 outline outline-red-400">
+  //     <div className="flex justify-center w-[50%]">
+  //       <MoviePoster imageUrl={imageUrl} />
+  //     </div>
+  //     <div className="flex-col w-[50%] relative">
+  //       <RemoveWatchlist movieId={movie.id} />
+
+  //       <h1>{movie.movieDetails.title}</h1>
+
+  //       <h2 className="font-afterAllBoldSerif font-bold text-2xl tracking-wide">
+  //         {movie.movieDetails.release_date}
+  //       </h2>
+
+  //       <p className="indent-7">{movie.movieDetails.overview}</p>
+
+  //       <div className="py-10">
+  //         {(movie.movieDetails.cast ?? []).map((cast) => (
+  //           <p className="indent-7" key={`${cast.name} as ${cast.character}`}>
+  //             {cast.name} as {cast.character}
+  //           </p>
+  //         ))}
+  //       </div>
+
+  //       {movie.movieDetails.genres.length > 0 && (
+  //         <div className="border-t-[1px] border-b-[1px] border-black flex flex-row gap-4 justify-center py-6">
+  //           {movie.movieDetails.genres.map((genre) => (
+  //             //@ts-ignore: not entirely sure what the issue here is.
+  //             <p>{genre}</p>
+  //           ))}
+  //         </div>
+  //       )}
+  //     </div>
+  //   </div>
+  // );
 };
