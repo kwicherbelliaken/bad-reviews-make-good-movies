@@ -9,8 +9,7 @@ export function ApiStack({ stack, app }: StackContext) {
   const tmdbApiBaseUrl = process.env.TMDB_API_BASE_URL;
 
   const api = new Api(stack, "api", {
-    customDomain:
-      app.stage === "production" ? "api.badreviewsmakegoodmovies.com" : undefined,
+    customDomain: `api-${app.stage}.badreviewsmakegoodmovies.com`,
     defaults: {
       function: {
         permissions: [brmgmDb],
