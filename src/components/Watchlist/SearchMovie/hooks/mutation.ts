@@ -4,7 +4,7 @@ import { queryClient } from "../../query";
 
 const addMovieToWatchlist = async (payload: any) => {
   const response = await fetch(
-    "https://97ogx4wg9c.execute-api.ap-southeast-2.amazonaws.com/movies/8JWw9ZPsUtkD-14h0Fnzs",
+    "https://api-slackermorris.badreviewsmakegoodmovies.com/movies/8JWw9ZPsUtkD-14h0Fnzs",
     {
       method: "POST",
       headers: {
