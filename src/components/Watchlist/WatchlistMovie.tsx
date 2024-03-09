@@ -62,7 +62,9 @@ export const WatchlistMovie = ({ movie }: WatchlistMovieProps) => {
       </div>
 
       <div>
-        <RemoveWatchlist movieId={movie.id} />
+        <div className="relative">
+          <RemoveWatchlist movieId={movie.id} />
+        </div>
         <h1>{movie.movieDetails.title}</h1>
         <h2 className="font-afterAllBoldSerif font-bold text-2xl tracking-wide">
           {movie.movieDetails.release_date}
