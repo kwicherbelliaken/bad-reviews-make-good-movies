@@ -56,12 +56,12 @@ export const WatchlistMovie = ({ movie }: WatchlistMovieProps) => {
   }
 
   return (
-    <div className="flex flex-wrap bg-grey-50 rounded-lg border p-4 gap-4 [&>div]:basis-96 [&>div]:flex-grow bg-purple-500">
-      <div className="bg-green-500">
+    <div className="flex flex-wrap bg-grey-50 rounded-lg border p-4 gap-4 [&>div]:basis-96 [&>div]:flex-grow">
+      <div className="flex justify-center">
         <MoviePoster imageUrl={imageUrl} />
       </div>
 
-      <div className="bg-red-500">
+      <div>
         <RemoveWatchlist movieId={movie.id} />
         <h1>{movie.movieDetails.title}</h1>
         <h2 className="font-afterAllBoldSerif font-bold text-2xl tracking-wide">
