@@ -11,7 +11,7 @@ const getWatchlistMovies = async () => {
   const watchlistId = "8JWw9ZPsUtkD-14h0Fnzs";
 
   const response = await fetch(
-    `https://97ogx4wg9c.execute-api.ap-southeast-2.amazonaws.com/users/${username}/watchlist/${watchlistId}`,
+    `https://api-slackermorris.badreviewsmakegoodmovies.com/users/${username}/watchlist/${watchlistId}`,
     {
       method: "GET",
     }

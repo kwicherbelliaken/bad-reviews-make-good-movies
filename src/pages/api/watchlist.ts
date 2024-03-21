@@ -14,7 +14,7 @@ export async function post({ request }: { request: Request }) {
   }
 
   const response = await fetch(
-    "https://eaoql5a9ab.execute-api.ap-southeast-2.amazonaws.com/users/2aff71b0-3ee9-11ee-bdeb-7797f77643a3",
+    "https://api-slackermorris.badreviewsmakegoodmovies.com/users/2aff71b0-3ee9-11ee-bdeb-7797f77643a3",
     {
       method: "PUT",
       body: JSON.stringify({
