@@ -1,7 +1,7 @@
 import { Api, use, type StackContext } from "sst/constructs";
 import { StorageStack } from "./StorageStack";
 
-export function ApiStack({ stack }: StackContext) {
+export function ApiStack({ stack, app }: StackContext) {
   const brmgmDb = use(StorageStack);
 
   // [ ]: get SST to manage these env vars
@@ -9,6 +9,8 @@ export function ApiStack({ stack }: StackContext) {
   const tmdbApiBaseUrl = process.env.TMDB_API_BASE_URL;
 
   const api = new Api(stack, "api", {
+    customDomain:
+      app.stage === "production" ? "api.badreviewsmakegoodmovies.com" : undefined,
     defaults: {
       function: {
         permissions: [brmgmDb],
@@ -28,7 +30,6 @@ export function ApiStack({ stack }: StackContext) {
       "GET /users/{username}/watchlist/{watchlistId}":
         "functions/src/list-watchlist-movies.handler",
       "PUT /users/{id}": "functions/src/update.handler",
-
     },
   });
 
@@ -47,9 +48,8 @@ export function ApiStack({ stack }: StackContext) {
     },
   });
 
-  // Show the URLs in the output
   stack.addOutputs({
-    ApiEndpoint: api.url,
+    ApiEndpoint: api.customDomainUrl || api.url,
     tmdbApiEndpoint: tmdbApi.url,
   });
 

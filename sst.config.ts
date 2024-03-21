@@ -25,13 +25,20 @@ export default {
         const api = use(ApiStack);
 
         const site = new AstroSite(stack, "site", {
+          customDomain: {
+            domainName:
+              app.stage === "production"
+                ? "badreviewsmakegoodmovies.com"
+                : undefined,
+            domainAlias: "www.badreviewsmakegoodmovies.com",
+          },
           environment: {
-            API_URL: api.url,
+            API_URL: api.customDomainUrl || api.url,
           },
         });
 
         stack.addOutputs({
-          url: site.url,
+          url: site.customDomainUrl || site.url,
         });
 
         return api;
