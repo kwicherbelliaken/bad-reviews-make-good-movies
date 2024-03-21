@@ -38,7 +38,7 @@ export default {
         });
 
         stack.addOutputs({
-          url: site.customDomainUrl || site.url,
+          SiteUrl: site.customDomainUrl || site.url,
         });
 
         return api;
