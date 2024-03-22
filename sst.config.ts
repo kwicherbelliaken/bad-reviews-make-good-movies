@@ -33,7 +33,7 @@ export default {
             domainAlias: "www.badreviewsmakegoodmovies.com",
           },
           environment: {
-            API_URL: api.customDomainUrl || api.url,
+            PUBLIC_API_URL: api.customDomainUrl || api.url,
           },
         });
 

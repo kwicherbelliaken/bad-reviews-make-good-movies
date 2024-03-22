@@ -3,19 +3,18 @@ import type { BffListResponse } from "../../../../../packages/core/tmdb/types";
 import { queryClient } from "../../query";
 
 const addMovieToWatchlist = async (payload: any) => {
-  const response = await fetch(
-    "https://api-slackermorris.badreviewsmakegoodmovies.com/movies/8JWw9ZPsUtkD-14h0Fnzs",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: "trial-user",
-        payload,
-      }),
-    }
-  );
+  const api = import.meta.env.PUBLIC_API_URL;
+
+  const response = await fetch(`${api}/movies/8JWw9ZPsUtkD-14h0Fnzs`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      username: "trial-user",
+      payload,
+    }),
+  });
 
   // [ ] think about returning the movie from the server so I can return it here
 

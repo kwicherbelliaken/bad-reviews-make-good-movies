@@ -15,13 +15,11 @@ const removeFromWatchlist = async (movieId: string) => {
     movieId: movieId.toString(),
   });
 
-  const response = await fetch(
-    "https://api-slackermorris.badreviewsmakegoodmovies.com/movies?" +
-      queryParams,
-    {
-      method: "DELETE",
-    }
-  );
+  const api = import.meta.env.PUBLIC_API_URL;
+
+  const response = await fetch(`${api}/movies?` + queryParams, {
+    method: "DELETE",
+  });
 
   type JSONResponse = {
     error: string;
