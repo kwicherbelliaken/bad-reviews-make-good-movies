@@ -2,14 +2,12 @@
 import Header from "../components/Header";
 import StarMenu from "../components/StarMenu";
 import FlowerAnimation from "../components/FlowerAnimation";
-// import Form from "../layouts/Form.astro";
 import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="Bad Reviews Make Good Movies">
   <main class="h-full">
     <Header />
-      <!-- <Form /> -->
       <FlowerAnimation client:visible />
       <StarMenu client:load />
   </main>
