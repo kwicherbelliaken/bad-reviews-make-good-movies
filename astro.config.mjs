@@ -18,16 +18,6 @@ export default defineConfig({
       applyBaseStyles: false,
     }),
     react(),
-    {
-      name: "namespace:id",
-      hooks: {
-        "astro:build:done": async ({ dir, routes, logger }) => {
-          console.log("astro:build:done");
-          console.log(dir);
-          console.log(routes);
-        },
-      },
-    },
   ],
   vite: {
     plugins: [glsl()],
