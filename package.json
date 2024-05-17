@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@astrojs/react": "^3.0.4",
-    "@astrojs/tailwind": "^5.0.2",
+    "@astrojs/tailwind": "^5.1.0",
     "@aws-sdk/client-dynamodb": "^3.478.0",
     "@aws-sdk/lib-dynamodb": "^3.478.0",
     "@middy/core": "^5.2.1",
