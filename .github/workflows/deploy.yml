@@ -20,15 +20,10 @@
             role-to-assume: arn:aws:iam::036621308944:role/GitHub
             role-duration-seconds: 3600
             aws-region: ap-southeast-2
-        - name: 📖 Read .nvmrc
-          run: echo ::set-output name=NVMRC::$(cat .nvmrc)
-          id: nvm
         - name: ⎔ Setup node
           uses: actions/setup-node@v3
           with:
-            node-version: ${{ steps.nvm.outputs.NVMRC }}
-        - name: 📦 check which node version I am running
-          run: node --version
+            node-version: '.nvmrc'
         - name: 🚀 deploy application
           run: |
             npm i && npx sst deploy --stage production
