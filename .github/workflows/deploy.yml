@@ -23,7 +23,7 @@
         - name: ⎔ Setup node
           uses: actions/setup-node@v3
           with:
-            node-version: '.nvmrc'
+            node-version-file: '.nvmrc'
         - name: 🚀 deploy application
           run: |
             npm i && npx sst deploy --stage production
