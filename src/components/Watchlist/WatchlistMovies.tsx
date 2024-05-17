@@ -10,8 +10,10 @@ const getWatchlistMovies = async () => {
   const username = "trial-user";
   const watchlistId = "8JWw9ZPsUtkD-14h0Fnzs";
 
+  const api = import.meta.env.PUBLIC_API_URL;
+
   const response = await fetch(
-    `https://api-slackermorris.badreviewsmakegoodmovies.com/users/${username}/watchlist/${watchlistId}`,
+    `${api}/users/${username}/watchlist/${watchlistId}`,
     {
       method: "GET",
     }

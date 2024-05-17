@@ -12,13 +12,11 @@ const searchMovies = async (query: string) => {
     title: query,
   });
 
-  const response = await fetch(
-    "https://api-slackermorris.badreviewsmakegoodmovies.com/movies?" +
-      queryParams,
-    {
-      method: "GET",
-    }
-  );
+  const api = import.meta.env.PUBLIC_API_URL;
+
+  const response = await fetch(`${api}/movies?` + queryParams, {
+    method: "GET",
+  });
 
   const data = await response.json();
 
