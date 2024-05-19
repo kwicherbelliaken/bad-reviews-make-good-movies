@@ -110,7 +110,7 @@ const Movie = ({
 const Movies = ({ movies }: { movies: BffListResponse }) => {
   return (
     <div className="flex flex-col gap-4 drop-shadow-md">
-      {movies?.map((movie, index) => (
+      {movies.map((movie, index) => (
         <Movie key={`${movie.title}-${index}`} movie={movie} movies={movies} />
       ))}
     </div>

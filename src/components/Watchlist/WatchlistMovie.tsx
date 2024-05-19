@@ -7,8 +7,7 @@ import { LoadingSpinner } from "../LoadingSpinner/LoadingSpinner";
 
 import type { Movie } from "../../../packages/schema/Movie";
 
-const TMDB_API_ENDPOINT =
-  "https://2ojnkh774c.execute-api.ap-southeast-2.amazonaws.com";
+const TMDB_API_ENDPOINT = import.meta.env.PUBLIC_TMDB_API_URL;
 
 interface WatchlistMovieProps {
   movie: Movie;

@@ -33,6 +33,7 @@ export function ApiStack({ stack, app }: StackContext) {
   });
 
   const tmdbApi = new Api(stack, "tmdbApi", {
+    customDomain: `api-${app.stage}-tmdb.badreviewsmakegoodmovies.com`,
     defaults: {
       function: {
         environment: {
@@ -48,9 +49,9 @@ export function ApiStack({ stack, app }: StackContext) {
   });
 
   stack.addOutputs({
-    ApiEndpoint: api.customDomainUrl || api.url,
-    tmdbApiEndpoint: tmdbApi.url,
+    baseApiEndpoint: api.customDomainUrl || api.url,
+    tmdbApiEndpoint: tmdbApi.customDomainUrl || tmdbApi.url,
   });
 
-  return api;
+  return { api, tmdbApi };
 }
