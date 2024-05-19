@@ -17,7 +17,7 @@
     "sst:dev": "sst dev"
   },
   "dependencies": {
-    "@astrojs/react": "^3.0.4",
+    "@astrojs/react": "^3.3.4",
     "@astrojs/tailwind": "^5.1.0",
     "@aws-sdk/client-dynamodb": "^3.478.0",
     "@aws-sdk/lib-dynamodb": "^3.478.0",
