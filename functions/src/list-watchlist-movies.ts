@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { default as handlerWrapper } from "../../packages/core/handler";
 import { Watchlist, getWatchlistMovies } from "../../packages/schema/Watchlist";
-import type { APIGatewayEventRequestContextV2 } from "aws-lambda";
 
 const eventSchema = z.object({});
 
