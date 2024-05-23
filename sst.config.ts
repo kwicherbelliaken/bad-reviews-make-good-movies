@@ -22,7 +22,7 @@ export default {
       .stack(StorageStack)
       .stack(ApiStack)
       .stack(function Site({ stack }: StackContext) {
-        const api = use(ApiStack);
+        const { api, tmdbApi } = use(ApiStack);
 
         const site = new AstroSite(stack, "site", {
           customDomain: {
@@ -35,6 +35,7 @@ export default {
           path: "./",
           environment: {
             PUBLIC_API_URL: api.customDomainUrl || api.url,
+            PUBLIC_TMDB_API_URL: tmdbApi.customDomainUrl || tmdbApi.url,
           },
         });
 
