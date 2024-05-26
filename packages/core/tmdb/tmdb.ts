@@ -7,6 +7,7 @@ import type {
   MovieDetails,
   SearchResult,
 } from "./types";
+import { Config } from "sst/node/config";
 
 const movieApi = {
   details: async (movieId: string): Promise<MovieDetails> => {
@@ -88,13 +89,16 @@ const imageApi = {
 
 const configurationApi = {
   details: async (): Promise<ConfigurationDetails> => {
+    // @ts-ignore: We know that we set this secret on the Config in the ApiStack.
+    const ACCESS_KEY = Config.TMDB_API_READ_ACCESS_TOKEN;
+
     const response = await fetch(
       `${process.env.TMDB_API_BASE_URL}/configuration`,
       {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.TMDB_API_READ_ACCESS_TOKEN}`,
+          Authorization: `Bearer ${ACCESS_KEY}`,
         },
       }
     );
