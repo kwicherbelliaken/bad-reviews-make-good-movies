@@ -9,6 +9,9 @@ import type {
 } from "./types";
 import { Config } from "sst/node/config";
 
+// @ts-ignore: We know that we set this secret on the Config in the ApiStack.
+const ACCESS_KEY = Config.TMDB_API_READ_ACCESS_TOKEN;
+
 const movieApi = {
   details: async (movieId: string): Promise<MovieDetails> => {
     const response = await fetch(
@@ -17,7 +20,7 @@ const movieApi = {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.TMDB_API_READ_ACCESS_TOKEN}`,
+          Authorization: `Bearer ${ACCESS_KEY}`,
         },
       }
     );
@@ -33,7 +36,7 @@ const movieApi = {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.TMDB_API_READ_ACCESS_TOKEN}`,
+          Authorization: `Bearer ${ACCESS_KEY}`,
         },
       }
     );
@@ -52,7 +55,7 @@ const searchApi = {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.TMDB_API_READ_ACCESS_TOKEN}`,
+          Authorization: `Bearer ${ACCESS_KEY}`,
         },
       }
     );

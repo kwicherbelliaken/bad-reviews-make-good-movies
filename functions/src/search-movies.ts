@@ -8,6 +8,9 @@ import {
 } from "../../packages/schema/Watchlist";
 import { z } from "zod";
 
+const USERNAME = process.env.USERNAME!;
+const WATCHLIST_ID = process.env.WATCHLIST_ID!;
+
 const eventSchema = z.object({
   queryStringParameters: z.object({
     title: z.string(),
@@ -27,7 +30,7 @@ export const rawHandler = async (event: SearchMoviesEvent) => {
 
   const movieInWatchlist = await findMovieInWatchlist(
     title,
-    new Watchlist("qfJTV11_V5KERNH7V0qT3", "trial-user")
+    new Watchlist(WATCHLIST_ID, USERNAME)
   );
 
   let searchedMovies = await tmdb.bffEndpoints.list(title);
