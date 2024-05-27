@@ -1,11 +1,15 @@
-import { Api, use, type StackContext } from "sst/constructs";
+import { Api, use, Config, type StackContext } from "sst/constructs";
 import { StorageStack } from "./StorageStack";
 
 export function ApiStack({ stack, app }: StackContext) {
   const brmgmDb = use(StorageStack);
 
-  // [ ]: get SST to manage these env vars
-  const accessToken = process.env.TMDB_API_READ_ACCESS_TOKEN;
+  const SSM_TMDB_API_KEY = new Config.Secret(stack, "TMDB_API_KEY");
+  const TMDB_API_READ_ACCESS_TOKEN = new Config.Secret(
+    stack,
+    "TMDB_API_READ_ACCESS_TOKEN"
+  );
+
   const tmdbApiBaseUrl = process.env.TMDB_API_BASE_URL;
 
   const api = new Api(stack, "api", {
@@ -16,7 +20,6 @@ export function ApiStack({ stack, app }: StackContext) {
         environment: {
           BRMGM_TABLE_NAME: brmgmDb.tableName,
           TMDB_API_BASE_URL: tmdbApiBaseUrl!,
-          TMDB_API_READ_ACCESS_TOKEN: accessToken!,
           WATCHLIST_ID: "8JWw9ZPsUtkD-14h0Fnzs",
           USERNAME: "trial-user",
         },
@@ -34,13 +37,14 @@ export function ApiStack({ stack, app }: StackContext) {
     },
   });
 
+  api.bind([TMDB_API_READ_ACCESS_TOKEN]);
+
   const tmdbApi = new Api(stack, "tmdbApi", {
     customDomain: `api-${app.stage}-tmdb.badreviewsmakegoodmovies.com`,
     defaults: {
       function: {
         environment: {
           TMDB_API_BASE_URL: tmdbApiBaseUrl!,
-          TMDB_API_READ_ACCESS_TOKEN: accessToken!,
         },
       },
     },
@@ -49,6 +53,8 @@ export function ApiStack({ stack, app }: StackContext) {
       "GET /image": "functions/tmdb/bff/get-movie-poster-url.handler",
     },
   });
+
+  tmdbApi.bind([TMDB_API_READ_ACCESS_TOKEN]);
 
   stack.addOutputs({
     baseApiEndpoint: api.customDomainUrl || api.url,
