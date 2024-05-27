@@ -17,6 +17,8 @@ export function ApiStack({ stack, app }: StackContext) {
           BRMGM_TABLE_NAME: brmgmDb.tableName,
           TMDB_API_BASE_URL: tmdbApiBaseUrl!,
           TMDB_API_READ_ACCESS_TOKEN: accessToken!,
+          WATCHLIST_ID: "8JWw9ZPsUtkD-14h0Fnzs",
+          USERNAME: "trial-user",
         },
       },
     },

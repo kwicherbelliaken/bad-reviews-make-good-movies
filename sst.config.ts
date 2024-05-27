@@ -36,6 +36,8 @@ export default {
           environment: {
             PUBLIC_API_URL: api.customDomainUrl || api.url,
             PUBLIC_TMDB_API_URL: tmdbApi.customDomainUrl || tmdbApi.url,
+            PUBLIC_WATCHLIST_ID: "8JWw9ZPsUtkD-14h0Fnzs",
+            PUBLIC_USERNAME: "trial-user",
           },
         });
 
