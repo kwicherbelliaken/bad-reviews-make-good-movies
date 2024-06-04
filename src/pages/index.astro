@@ -1,14 +1,22 @@
 ---
 import Header from "../components/Header";
+import HeaderAlternative from "../components/Header/HeaderAlternative.astro";
 import StarMenu from "../components/StarMenu";
 import FlowerAnimation from "../components/FlowerAnimation";
 import Layout from "../layouts/Layout.astro";
+
+import { ClerkLayout } from "astro-clerk-auth/components/control";
+
 ---
 
-<Layout title="Bad Reviews Make Good Movies">
-  <main class="h-full">
-    <Header />
+<ClerkLayout>
+  <Layout title="Bad Reviews Make Good Movies">
+    <main class="h-full">
+
+      <HeaderAlternative/>
+      <Header />
       <FlowerAnimation client:visible />
       <StarMenu client:load />
-  </main>
-</Layout>
+    </main>
+  </Layout>
+</ClerkLayout>
