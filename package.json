@@ -17,6 +17,7 @@
     "sst:dev": "sst dev"
   },
   "dependencies": {
+    "@astrojs/node": "^8.2.5",
     "@astrojs/react": "^3.3.4",
     "@astrojs/tailwind": "^5.1.0",
     "@aws-sdk/client-dynamodb": "^3.478.0",
@@ -31,6 +32,7 @@
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "astro": "^4.8.5",
+    "astro-clerk-auth": "^0.7.0",
     "aws-sdk": "^2.1525.0",
     "http-errors": "^2.0.0",
     "nanoid": "^4.0.2",

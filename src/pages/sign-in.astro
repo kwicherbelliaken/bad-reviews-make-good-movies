@@ -1,0 +1,25 @@
+---
+import { ClerkLayout } from "astro-clerk-auth/components/control";
+import { SignIn } from "astro-clerk-auth/components/react";
+import Layout from "../layouts/Layout.astro";
+
+
+---
+
+<ClerkLayout >
+  <Layout title="Sign In to Clerk + Astro">
+    <div>
+      <SignIn path="/sign-in"/>
+    </div>
+  </Layout>
+</ClerkLayout>
+
+<style>
+  div {
+    width: full;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+</style>

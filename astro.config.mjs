@@ -4,6 +4,7 @@ import glsl from "vite-plugin-glsl";
 import aws from "astro-sst";
 
 import react from "@astrojs/react";
+import clerk from "astro-clerk-auth";
 
 // https://astro.build/config
 export default defineConfig({
@@ -18,6 +19,10 @@ export default defineConfig({
       applyBaseStyles: false,
     }),
     react(),
+    clerk({
+      afterSignInUrl: "/",
+      afterSignUpUrl: "/",
+    }),
   ],
   vite: {
     plugins: [glsl()],
