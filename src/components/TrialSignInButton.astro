@@ -22,10 +22,7 @@
 
         if (signInButton) {
           signInButton.addEventListener("click", () => {
-            clerk.openSignIn({
-              afterSignInUrl: "/dashboard",
-              afterSignUpUrl: "/dashboard",
-            });
+            clerk.openSignIn();
           });
         }
       }
