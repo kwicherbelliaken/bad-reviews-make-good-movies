@@ -1,14 +1,44 @@
 ---
-import Header from "../components/Header";
-import StarMenu from "../components/StarMenu";
-import FlowerAnimation from "../components/FlowerAnimation";
-import Layout from "../layouts/Layout.astro";
+// ---
+// import Header from "../components/Header";
+// import StarMenu from "../components/StarMenu";
+// import FlowerAnimation from "../components/FlowerAnimation";
+// import Layout from "../layouts/Layout.astro";
+// ---
+
+// <Layout title="Bad Reviews Make Good Movies">
+//   <main class="h-full">
+//     <Header />
+//       <FlowerAnimation client:visible />
+//       <StarMenu client:load />
+//   </main>
+// </Layout>
+
+import Layout from "../components/TrialLayout.astro";
+
+import SignedIn from "../components/TrialSignedIn.astro";
+import SignedOut from "../components/TrialSignedOut.astro";
+import SignInButton from "../components/TrialSignInButton.astro";
 ---
 
-<Layout title="Bad Reviews Make Good Movies">
-  <main class="h-full">
-    <Header />
-      <FlowerAnimation client:visible />
-      <StarMenu client:load />
-  </main>
+<Layout>
+  <article class="grid lg:grid-cols-2">
+    <div class="px-8 py-20 md:px-20 lg:py-48">
+      <h1 class="text-5xl font-semibold text-black md:text-6xl gradient">
+        Auth starts here.
+      </h1>
+      <p class="mt-2 text-lg">
+        A simple and powerful Astro template featuring authentication and user
+        management powered by Clerk.
+      </p>
+      <div class="flex gap-2 mt-8">
+        <SignedOut>
+          <SignInButton />
+        </SignedOut>
+        <SignedIn>
+          <a href="/dashboard"> View Demo </a>
+        </SignedIn>
+      </div>
+    </div>
+  </article>
 </Layout>

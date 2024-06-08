@@ -1,0 +1,34 @@
+---
+
+---
+
+<button
+  id="auth-sign-in-button"
+  type="button"
+  class="flex content-center font-semibold text-black transition-colors duration-200 rounded-lg bg-primary-600 hover:bg-primary-700"
+>
+  Sign In
+</button>
+
+<script>
+  import { auth } from "../../lib/authStore";
+
+  auth.subscribe(async (clerk) => {
+    if (clerk !== null) {
+      await clerk.load();
+
+      if (clerk.loaded) {
+        const signInButton = document.getElementById("auth-sign-in-button");
+
+        if (signInButton) {
+          signInButton.addEventListener("click", () => {
+            clerk.openSignIn({
+              afterSignInUrl: "/dashboard",
+              afterSignUpUrl: "/dashboard",
+            });
+          });
+        }
+      }
+    }
+  });
+</script>
