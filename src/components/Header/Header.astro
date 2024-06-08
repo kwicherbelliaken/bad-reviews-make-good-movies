@@ -1,6 +1,9 @@
 ---
 import SignedIn from "../TrialSignedIn.astro";
 import UserButton from "../TrialUserButton.astro";
+
+import SignedOut from '../TrialSignedOut.astro';
+import SignInButton from '../TrialSignInButton.astro';
 ---
 
 <div class="bg-[#fafafa] h-24 p-4 flex justify-between items-center">
@@ -13,4 +16,9 @@ import UserButton from "../TrialUserButton.astro";
   <SignedIn>
     <UserButton />
   </SignedIn>
+
+  <SignedOut>
+    <SignInButton/>
+  </SignedOut>
+
 </div>
