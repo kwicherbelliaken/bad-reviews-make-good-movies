@@ -7,13 +7,13 @@
 </div>
 
 <script>
-  import { auth } from "../../lib/authStore";
+  import { authStoreAPI } from "../../lib/authStore";
+
+  const auth = authStoreAPI.get();
 
   auth.subscribe(async (clerk) => {
-    if (clerk !== null) {
-      await clerk.load();
 
-      if (clerk.loaded) {
+
         const signedOut = document.getElementById("auth-signed-out")!;
 
         if (clerk.user === null) {
@@ -21,7 +21,5 @@
         } else {
           signedOut.classList.add("hidden");
         }
-      }
-    }
   });
 </script>

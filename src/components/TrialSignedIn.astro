@@ -7,13 +7,13 @@ const { classes } = Astro.props;
 </div>
 
 <script>
-  import { auth } from "../../lib/authStore";
+  import { authStoreAPI } from "../../lib/authStore";
+
+  const auth = authStoreAPI.get();
 
   auth.subscribe(async (clerk) => {
-    if (clerk !== null) {
-      await clerk.load();
 
-      if (clerk.loaded) {
+
         const signedIn = document.querySelectorAll(".auth-signed-in")!;
         
         if (!!clerk.user) {
@@ -25,7 +25,5 @@ const { classes } = Astro.props;
             el.classList.add("hidden");
           });
         }
-      }
-    }
   });
 </script>

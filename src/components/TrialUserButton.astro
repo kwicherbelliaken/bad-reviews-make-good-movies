@@ -5,19 +5,15 @@
 <div id="auth-user-button"></div>
 
 <script>
-  import { auth } from "../../lib/authStore";
+  import { authStoreAPI } from "../../lib/authStore";
+
+  const auth = authStoreAPI.get();
 
   auth.subscribe(async (clerk) => {
-    if (clerk !== null) {
-      await clerk.load();
-
-      if (clerk.loaded) {
         const userButton =
           document.querySelector<HTMLDivElement>("#auth-user-button")!;
         clerk.mountUserButton(userButton, {
           afterSignOutUrl: "/",
         });
-      }
-    }
   });
 </script>
