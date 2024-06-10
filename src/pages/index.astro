@@ -1,5 +1,6 @@
 ---
-import Header from "../components/Header";
+import Header from "../components/Header/Header.astro";
+
 import StarMenu from "../components/StarMenu";
 import FlowerAnimation from "../components/FlowerAnimation";
 import Layout from "../layouts/Layout.astro";
@@ -8,7 +9,7 @@ import Layout from "../layouts/Layout.astro";
 <Layout title="Bad Reviews Make Good Movies">
   <main class="h-full">
     <Header />
-      <FlowerAnimation client:visible />
-      <StarMenu client:load />
+    <FlowerAnimation client:visible />
+    <StarMenu client:load />
   </main>
 </Layout>
