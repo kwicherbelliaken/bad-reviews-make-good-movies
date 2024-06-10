@@ -1,4 +1,3 @@
-//  [ ] to clear up
 const Header = () => {
   return (
     <div className="bg-[#fafafa] h-24 p-4">
