@@ -1,0 +1,19 @@
+---
+
+---
+
+<div id="auth-user-button"></div>
+
+<script>
+  import { authStoreAPI } from "../../lib/authStore";
+
+  const auth = authStoreAPI.get();
+
+  auth.subscribe(async (clerk) => {
+    const userButton =
+      document.querySelector<HTMLDivElement>("#auth-user-button")!;
+    clerk.mountUserButton(userButton, {
+      afterSignOutUrl: "/",
+    });
+  });
+</script>
