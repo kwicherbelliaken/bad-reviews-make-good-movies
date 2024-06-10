@@ -4,7 +4,6 @@ import UserDetails from "../components/TrialUserDetails.astro";
 
 import { createClerkClient } from "@clerk/clerk-sdk-node";
 
-
 const publishableKey = import.meta.env.PUBLIC_CLERK_PUBLISHABLE_KEY;
 const secretKey = import.meta.env.CLERK_SECRET_KEY;
 
@@ -23,25 +22,10 @@ const clerk = createClerkClient({ publishableKey, secretKey });
 const user = await clerk.users.getUser("user_2h6uHpPT1BmpgEPeeQxAtCTFKmq");
 ---
 
-<Layout>
+<Layout title="Bad Reviews Make Good Movies Dashboard">
   <div class="px-8 pt-6 pb-20 md:px-20">
     <div class="grid gap-4 mt-8 lg:grid-cols-3">
       <UserDetails user={user} />
     </div>
   </div>
 </Layout>
-
-<script>
-  import { auth } from "../../lib/authStore";
-
-  auth.subscribe(($clerk) => {
-    if ($clerk) {
-      let organization = $clerk.organization;
-      $clerk.addListener((clerk) => {
-        if (organization?.id !== clerk.organization?.id) {
-          location.reload();
-        }
-      });
-    }
-  });
-</script>
