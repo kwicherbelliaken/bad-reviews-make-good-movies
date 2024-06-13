@@ -2,26 +2,36 @@
 const { classes } = Astro.props;
 ---
 
-<div class=`auth-signed-in hidden ${classes ?? ''}`>
-  <slot />
-</div>
+<signed-in-container>
+  <div class=`auth-signed-in hidden ${classes ?? ''}`>
+    <slot />
+  </div>
+</signed-in-container>
 
 <script>
   import { authStoreAPI } from "../../lib/authStore";
 
-  const auth = authStoreAPI.get();
+  class SignedInContainer extends HTMLElement {
+    constructor() {
+      super();
 
-  auth.subscribe(async (clerk) => {
-    const signedIn = document.querySelectorAll(".auth-signed-in")!;
+      const signedIn = document.querySelectorAll(".auth-signed-in")!;
 
-    if (!!clerk.user) {
-      signedIn.forEach((el) => {
-        el.classList.remove("hidden");
-      });
-    } else {
-      signedIn.forEach((el) => {
-        el.classList.add("hidden");
+      const auth = authStoreAPI.get();
+
+      auth.subscribe(async (clerk) => {
+        if (!!clerk.user) {
+          signedIn.forEach((el) => {
+            el.classList.remove("hidden");
+          });
+        } else {
+          signedIn.forEach((el) => {
+            el.classList.add("hidden");
+          });
+        }
       });
     }
-  });
+  }
+
+  customElements.define("signed-in-container", SignedInContainer);
 </script>

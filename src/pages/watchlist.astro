@@ -1,18 +1,16 @@
 ---
-import Header from "../components/Header";
+import { Header } from "../components/Header";
 import Layout from "../layouts/Layout.astro";
 import { SearchMovies } from "../components/Watchlist/SearchMovies";
 import { WatchlistMovies } from "../components/Watchlist/WatchlistMovies";
 ---
 
-<Layout title="Bad Reviews Make Good Movies">
+<Layout>
   <main class="m-auto">
     <Header />
     <div class="flex gap-8 items-end h-[100vh] p-2 overflow-auto w-full">
-      <SearchMovies client:only/>
+      <SearchMovies client:only />
       <WatchlistMovies client:load />
     </div>
   </main>
 </Layout>
-
-
