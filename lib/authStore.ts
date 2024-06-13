@@ -22,14 +22,8 @@ export const authStore = async () => {
       })
     );
 
-  console.log("this should load only once");
-
   return {
     get: () => {
-      console.log("logging in the get", {
-        loaded: clerk.loaded,
-        user: clerk.user,
-      });
       if (store == null) {
         console.warn(
           "Uh oh. The authentication store is not yet instantiated."

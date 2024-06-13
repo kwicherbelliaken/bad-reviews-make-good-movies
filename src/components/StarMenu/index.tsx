@@ -83,6 +83,7 @@ const StarMenu = () => {
           id="watchlist-page"
           href="/watchlist"
           className="pt-6 hover:text-purple-400 hover:font-bold opacity-0 transition-opacity duration-1000 ease-out group-hover:opacity-100"
+          data-astro-reload
         >
           <p id="watchlist-page-text">watchlist</p>
         </a>
