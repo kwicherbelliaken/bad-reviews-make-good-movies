@@ -2,18 +2,29 @@
 
 ---
 
-<div id="auth-user-button"></div>
+<user-button>
+  <div id="auth-user-button"></div>
+</user-button>
 
 <script>
   import { authStoreAPI } from "../../lib/authStore";
 
-  const auth = authStoreAPI.get();
+  class UserButton extends HTMLElement {
+    constructor() {
+      super();
 
-  auth.subscribe(async (clerk) => {
-    const userButton =
-      document.querySelector<HTMLDivElement>("#auth-user-button")!;
-    clerk.mountUserButton(userButton, {
-      afterSignOutUrl: "/",
-    });
-  });
+      const userButton =
+        document.querySelector<HTMLDivElement>("#auth-user-button")!;
+
+      const auth = authStoreAPI.get();
+
+      auth.subscribe(async (clerk) => {
+        clerk.mountUserButton(userButton, {
+          afterSignOutUrl: "/",
+        });
+      });
+    }
+  }
+
+  customElements.define("user-button", UserButton);
 </script>
