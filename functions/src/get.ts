@@ -8,7 +8,15 @@ const eventSchema = z.object({
   pathParameters: z.object({
     username: z.string(),
   }),
+  queryStringParameters: z
+    .object({
+      resolveWatchlist: z.enum(["true", "false"]),
+    })
+    .optional()
+    .nullable(),
 });
+
+// [ ] update the test
 
 export type GetUserEvent = Pick<APIGatewayProxyEventV2, "pathParameters"> &
   z.infer<typeof eventSchema>;
@@ -16,9 +24,15 @@ export type GetUserEvent = Pick<APIGatewayProxyEventV2, "pathParameters"> &
 export const rawHandler = async (event: GetUserEvent): Promise<User> => {
   const {
     pathParameters: { username },
+    queryStringParameters: {
+      resolveWatchlist: resolveWatchlistQueryStringParameter,
+    } = {},
   } = event;
 
-  const response = await getUser(username);
+  const resolveWatchlist =
+    (resolveWatchlistQueryStringParameter ?? "").match(/true/i) != null;
+
+  const response = await getUser(username, resolveWatchlist);
 
   return response;
 };
