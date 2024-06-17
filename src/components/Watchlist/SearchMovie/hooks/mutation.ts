@@ -2,45 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import type { BffListResponse } from "../../../../../packages/core/tmdb/types";
 import { queryClient } from "../../query";
 
-import { authStoreAPI } from "../../../../../lib/authStore";
-
-const api = import.meta.env.PUBLIC_API_URL;
-
-const _getUsernameAndWatchlistId = async (): Promise<{
-  username: string;
-  watchlistId: string;
-}> => {
-  // [ ] get the current clerk user
-  let currentUserId;
-
-  const auth = authStoreAPI.get();
-
-  auth.subscribe((clerk) => {
-    if (clerk && clerk.user) {
-      currentUserId = clerk.user.id;
-    }
-  });
-
-  const getUserResponse = await fetch(
-    `${api}/users/${currentUserId}?resolveWatchlist=true`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
-
-  const body = await getUserResponse.json();
-
-  if (getUserResponse.status !== 200 || !getUserResponse.ok) {
-    throw new Error(body.error);
-  }
-
-  // Figure out a better way to have type support for my fetch calls.
-  // @ts-ignore
-  return body;
-};
+import { getSessionUserDetails } from "./utilities";
 
 const addMovieToWatchlist = async (payload: any) => {
   const api = import.meta.env.PUBLIC_API_URL;
@@ -57,7 +19,7 @@ const addMovieToWatchlist = async (payload: any) => {
   //! I suppose another approach would be to modify the endpoint below to not expect a 'watchlistId' and instead to resolve
   //! it server side, similar to what I am doing in the '/get-user' endpoint.
 
-  const { username, watchlistId } = await _getUsernameAndWatchlistId();
+  const { username, watchlistId } = await getSessionUserDetails();
 
   const response = await fetch(`${api}/movies/${watchlistId}`, {
     method: "POST",

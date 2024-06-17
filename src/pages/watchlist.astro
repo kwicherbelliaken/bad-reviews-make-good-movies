@@ -10,7 +10,7 @@ import { WatchlistMovies } from "../components/Watchlist/WatchlistMovies";
     <Header />
     <div class="flex gap-8 items-end h-[100vh] p-2 overflow-auto w-full">
       <SearchMovies client:only />
-      <WatchlistMovies client:load />
+      <WatchlistMovies client:only />
     </div>
   </main>
 </Layout>
