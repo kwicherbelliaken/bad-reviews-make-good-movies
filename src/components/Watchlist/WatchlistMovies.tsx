@@ -2,13 +2,15 @@ import { useQuery } from "@tanstack/react-query";
 import { queryClient } from "./query";
 import { LoadingSpinner } from "../LoadingSpinner/LoadingSpinner";
 import { WatchlistMovie } from "./WatchlistMovie";
+import { getSessionUserDetails } from "./SearchMovie/hooks/utilities";
 import type { Movie } from "../../../packages/schema/Movie";
 
 interface WatchlistMoviesProps {}
 
 const getWatchlistMovies = async () => {
-  const username = "trial-user";
-  const watchlistId = "8JWw9ZPsUtkD-14h0Fnzs";
+  const { username, watchlistId } = await getSessionUserDetails();
+
+  // [ ] these parameters need to be dynamica
 
   const api = import.meta.env.PUBLIC_API_URL;
 
