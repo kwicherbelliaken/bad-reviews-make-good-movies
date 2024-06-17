@@ -28,9 +28,9 @@ export async function onRequest({ request, redirect }, next) {
     secretKey,
   });
 
-  if (!isSignedIn) {
-    return redirect("/");
-  }
+  // if (!isSignedIn) {
+  //   return redirect("/");
+  // }
 
   const auth = toAuth();
 
@@ -42,7 +42,7 @@ export async function onRequest({ request, redirect }, next) {
   // have been synced with the BRMGM database.
   //
   // This is a bit of a hack but it will work for now. I will need to come back to this and do it properly at some point.
-  if (auth.userId) {
+  if (auth && auth.userId) {
     const user = await client.users.getUser(auth.userId);
 
     if (user) {

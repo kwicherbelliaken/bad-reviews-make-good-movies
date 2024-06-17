@@ -62,16 +62,40 @@ export const createUser = async (user: User): Promise<User> => {
   }
 };
 
-export const getUser = async (username: string): Promise<User> => {
+export const getUser = async (
+  username: string,
+  resolveWatchlist: boolean
+): Promise<User & { watchlistId?: Pick<Watchlist, "id"> }> => {
   const user = new User(username);
 
   try {
+    let response;
+
     const resp = await client.get({
       TableName: process.env.BRMGM_TABLE_NAME!,
       Key: user.keys(),
     });
 
-    return User.fromItem(resp.Item);
+    const userResponse = User.fromItem(resp.Item);
+
+    if (resolveWatchlist) {
+      const watchlistResponse = await client.get({
+        TableName: process.env.BRMGM_TABLE_NAME!,
+        Key: new Watchlist("", username).keys(),
+      });
+
+      console.log("logging here", JSON.stringify(watchlistResponse.Item));
+
+      const watchlist = Watchlist.fromItem(watchlistResponse.Item);
+
+      response = { ...userResponse, watchlistId: watchlist.id };
+    } else {
+      response = userResponse;
+    }
+
+    return response;
+
+    // [ ] filter out the watchlist from the actual user
   } catch (error) {
     console.error(error);
     throw error;

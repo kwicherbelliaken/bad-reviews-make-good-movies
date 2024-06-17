@@ -2,16 +2,32 @@ import { useMutation } from "@tanstack/react-query";
 import type { BffListResponse } from "../../../../../packages/core/tmdb/types";
 import { queryClient } from "../../query";
 
+import { getSessionUserDetails } from "./utilities";
+
 const addMovieToWatchlist = async (payload: any) => {
   const api = import.meta.env.PUBLIC_API_URL;
 
-  const response = await fetch(`${api}/movies/8JWw9ZPsUtkD-14h0Fnzs`, {
+  //! This is so fucking clumsy. Calling '/get-user' each time I add a movie to my watchlist. But, I needed
+  //! a way to resolve the 'watchlistId' which we use in the path.
+  //!
+  //! I settled on modifying the '/get-user' endpoint to return the 'watchlistId' if passed an appropriate flag.
+  //!
+  //! My other alternative was to return it from the `create-user` call and then set it against an equivalent Clerk
+  //! user and thereby sync them up. But then I didn't want to set any more information than I need to into Clerk.
+  //! Watchlist "stuff" feels relevant to my data store. Not Clerks.
+  //!
+  //! I suppose another approach would be to modify the endpoint below to not expect a 'watchlistId' and instead to resolve
+  //! it server side, similar to what I am doing in the '/get-user' endpoint.
+
+  const { username, watchlistId } = await getSessionUserDetails();
+
+  const response = await fetch(`${api}/movies/${watchlistId}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      username: "trial-user",
+      username,
       payload,
     }),
   });
