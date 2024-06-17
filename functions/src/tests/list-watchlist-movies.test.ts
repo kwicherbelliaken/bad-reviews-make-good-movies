@@ -1,6 +1,5 @@
 import {
   rawHandler as listWatchlistMoviesHandler,
-  watchlist as mockWatchlist,
   type ListWatchlistMoviesEvent,
 } from "../list-watchlist-movies";
 
@@ -12,8 +11,19 @@ import { DynamoDBDocumentClient, QueryCommand } from "@aws-sdk/lib-dynamodb";
 
 import { Movie } from "../../../packages/schema/Movie";
 import { nanoid } from "nanoid";
+import { Watchlist } from "../../../packages/schema/Watchlist";
 
-const mockBaseEvent: ListWatchlistMoviesEvent = {};
+const mockUsername = "trial-user";
+const mockWatchlistId = "trial-watchlist-id";
+
+const mockBaseEvent: ListWatchlistMoviesEvent = {
+  pathParameters: {
+    username: mockUsername,
+    watchlistId: mockWatchlistId,
+  },
+};
+
+const mockWatchlist = new Watchlist("trial-watchlist-id", "trial-user");
 
 vi.stubEnv("BRMGM_TABLE_NAME", "unified-test-table");
 
@@ -38,11 +48,7 @@ describe("[handlers - GET /watchlist]: list watchlist movies", () => {
         poster_path: "/trial-poster-path",
         overview: "trial-overview",
         release_date: "trial-release-date",
-        genres: [
-          {
-            name: "trial-genre",
-          },
-        ],
+        genres: ["trial-genre-1"],
         cast: [
           {
             name: "trial-cast",
