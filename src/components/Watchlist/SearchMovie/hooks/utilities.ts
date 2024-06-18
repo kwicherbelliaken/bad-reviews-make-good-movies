@@ -10,7 +10,6 @@ export const getSessionUserDetails = async (): Promise<{
   let currentUserId;
 
   const auth = authStoreAPI.get();
-  console.log("🚀 ~ getSessionUserDetails ~ auth:", auth);
 
   auth.subscribe((clerk) => {
     if (clerk && clerk.user) {
