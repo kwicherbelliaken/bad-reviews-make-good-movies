@@ -5,7 +5,7 @@ import {
 } from "@clerk/clerk-sdk-node";
 
 const api = import.meta.env.PUBLIC_API_URL;
-const secretKey = import.meta.env.CLERK_SECRET_KEY;
+const secretKey = import.meta.env.PUBLIC_CLERK_SECRET_KEY;
 const publishableKey = import.meta.env.PUBLIC_CLERK_PUBLISHABLE_KEY;
 
 const protectedPageUrls = ["/dashboard"];
