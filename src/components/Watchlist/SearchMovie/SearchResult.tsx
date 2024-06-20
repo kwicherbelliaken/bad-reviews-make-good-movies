@@ -121,15 +121,19 @@ interface SearchResultsProps {
   result: ReturnType<typeof useSearchMovies>["result"];
 }
 
+const animationClassNames =
+  "after:content-[''] after:bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] after:from-rose-100 after:to-teal-100 after:absolute after:top-0 after:left-0 after:w-full after:h-full after:animate-ping";
+
 export const SearchResults = ({ result }: SearchResultsProps) => (
   <>
     {match(result)
       .with({ status: "loading" }, () => (
-        <div className="h-full w-full text-center relative overflow-hidden">
-          <div className="absolute top-[50%] left-[50%] -translate-y-1/2 -translate-x-1/2">
+        <div
+          className={`h-fit w-full text-center relative overflow-hidden outline outline-purple-500 ${animationClassNames} flex justify-center`}
+        >
+          <div className="p-10">
             <Casette />
           </div>
-          <div className="h-full animate-ping bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-rose-100 to-teal-100" />
         </div>
       ))
       .with({ status: "success" }, ({ data }) => <Movies movies={data} />)

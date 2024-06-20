@@ -38,6 +38,8 @@ const useGetWatchlistMovies = () => {
   );
 };
 
+const gridClassNames = "col-span-5 sm:col-span-3";
+
 export const WatchlistMovies = ({}: WatchlistMoviesProps) => {
   const { data, isLoading, isFetching, isRefetching, isError, error } =
     useGetWatchlistMovies();
@@ -48,14 +50,14 @@ export const WatchlistMovies = ({}: WatchlistMoviesProps) => {
     return null;
   } else if (isLoading || isFetching || isRefetching) {
     return (
-      <div className="flex flex-col w-[70%] h-full align-middle items-center justify-center">
+      <div className="flex flex-col h-full align-middle items-center justify-center">
         <LoadingSpinner />
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col w-[70%] h-full gap-4">
+    <div className={`flex flex-col h-full gap-4 ${gridClassNames}`}>
       {data.map((movie) => (
         <WatchlistMovie
           key={`${movie.movieDetails.title}-${movie.movieDetails.release_date}`}
