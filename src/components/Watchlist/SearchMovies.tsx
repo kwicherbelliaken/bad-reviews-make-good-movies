@@ -4,7 +4,7 @@ import { useSearchMovies } from "./SearchMovie/hooks/query";
 
 interface SearchMoviesProps {}
 
-const gridClassNames = "col-span-2";
+const gridClassNames = "col-span-5 sm:col-span-2";
 
 export const SearchMovies = ({}: SearchMoviesProps) => {
   const { value, result, search } = useSearchMovies();

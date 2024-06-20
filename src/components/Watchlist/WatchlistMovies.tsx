@@ -38,7 +38,7 @@ const useGetWatchlistMovies = () => {
   );
 };
 
-const gridClassNames = "col-span-3";
+const gridClassNames = "col-span-5 sm:col-span-3";
 
 export const WatchlistMovies = ({}: WatchlistMoviesProps) => {
   const { data, isLoading, isFetching, isRefetching, isError, error } =
