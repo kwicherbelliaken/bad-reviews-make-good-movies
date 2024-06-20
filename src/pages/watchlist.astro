@@ -8,7 +8,7 @@ import { WatchlistMovies } from "../components/Watchlist/WatchlistMovies";
 <Layout>
   <main class="m-auto">
     <Header />
-    <div class="flex gap-8 items-end h-[100vh] p-2 overflow-auto w-full">
+    <div class="grid grid-cols-5 h-[100vh] p-2 overflow-auto w-full">
       <SearchMovies client:only />
       <WatchlistMovies client:only />
     </div>

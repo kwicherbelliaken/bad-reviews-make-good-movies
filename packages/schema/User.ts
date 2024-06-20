@@ -65,7 +65,7 @@ export const createUser = async (user: User): Promise<User> => {
 export const getUser = async (
   username: string,
   resolveWatchlist: boolean
-): Promise<User & { watchlistId?: Pick<Watchlist, "id"> }> => {
+): Promise<User | (User & { watchlistId: Pick<Watchlist, "id"> })> => {
   const user = new User(username);
 
   try {
@@ -83,8 +83,6 @@ export const getUser = async (
         TableName: process.env.BRMGM_TABLE_NAME!,
         Key: new Watchlist("", username).keys(),
       });
-
-      console.log("logging here", JSON.stringify(watchlistResponse.Item));
 
       const watchlist = Watchlist.fromItem(watchlistResponse.Item);
 
