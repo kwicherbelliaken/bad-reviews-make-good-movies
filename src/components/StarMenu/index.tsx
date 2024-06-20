@@ -66,7 +66,8 @@ const StarMenu = () => {
       className="absolute right-0 overflow-visible w-full h-full z-10 bg-transparent group"
     >
       <div
-        className={`flex flex-col align-middle absolute z-10 w-16 right-0 top-0 m-8 cursor-pointer group transition-[right,top] ease-in-out duration-1000 group-hover:top-1/2 group-hover:right-1/2`}
+        // NB: In group-hover:right-[calc(50%-64px)] the 64px is the width of the star which is derived from 'w-16'. 'w-16' = 64px.
+        className={`flex flex-col align-middle absolute z-10 w-16 right-0 top-0 m-8 cursor-pointer group transition-[right,top] ease-in-out duration-1000 group-hover:top-1/2 group-hover:right-[calc(50%-64px)]`}
       >
         <img
           id="two-dimensional-star"
