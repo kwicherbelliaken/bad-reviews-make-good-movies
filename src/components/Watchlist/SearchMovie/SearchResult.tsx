@@ -129,7 +129,7 @@ export const SearchResults = ({ result }: SearchResultsProps) => (
     {match(result)
       .with({ status: "loading" }, () => (
         <div
-          className={`h-fit w-full text-center relative overflow-hidden outline outline-purple-500 ${animationClassNames} flex justify-center`}
+          className={`h-fit w-full text-center relative overflow-hidden ${animationClassNames} flex justify-center`}
         >
           <div className="p-10">
             <Casette />
