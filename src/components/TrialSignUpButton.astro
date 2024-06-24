@@ -1,0 +1,27 @@
+---
+
+---
+
+<button
+  id="auth-sign-up-button"
+  type="button"
+  class="flex content-center font-semibold text-black transition-colors duration-200 rounded-lg bg-primary-600 hover:bg-primary-700"
+>
+  Sign Up
+</button>
+
+<script>
+  import { authStoreAPI } from "../../lib/authStore";
+
+  const auth = authStoreAPI.get();
+
+  auth.subscribe(async (clerk) => {
+    const signUpButton = document.getElementById("auth-sign-up-button");
+
+    if (signUpButton) {
+      signUpButton.addEventListener("click", () => {
+        clerk.openSignUp();
+      });
+    }
+  });
+</script>
