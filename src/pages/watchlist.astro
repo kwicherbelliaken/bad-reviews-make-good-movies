@@ -3,14 +3,13 @@ import { Header } from "../components/Header";
 import Layout from "../layouts/Layout.astro";
 import { SearchMovies } from "../components/Watchlist/SearchMovies";
 import { WatchlistMovies } from "../components/Watchlist/WatchlistMovies";
+import { ResponsiveContainer } from "../components/Watchlist/ResponsiveContainer.tsx"
 ---
 
 <Layout>
   <main class="m-auto">
     <Header />
-    <div class="grid grid-cols-5 h-[100vh] p-2 overflow-auto w-full">
-      <SearchMovies client:only />
-      <WatchlistMovies client:only />
-    </div>
+      <ResponsiveContainer client:only />
   </main>
 </Layout>
+
