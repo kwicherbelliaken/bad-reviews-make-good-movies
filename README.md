@@ -2,6 +2,22 @@
 
 Initially generated from the [Astro Starter Kit](https://docs.astro.build/en/getting-started/).
 
+<p align="center">
+  <a href="#key-features">🔑 Key Features</a> •
+  <a href="#how-to-use">How To Use</a> •
+  <a href="#download">Download</a> •
+  <a href="#credits">Credits</a> •
+  <a href="#related">Related</a> •
+  <a href="#license">License</a>
+</p>
+
+<img width="1512" alt="Screen Shot 2024-06-26 at 8 05 57 AM" src="https://github.com/kwicherbelliaken/bad-reviews-make-good-movies/assets/35620369/b7858811-cd78-48d5-940f-9223a6b14246">
+
+
+# Key Features
+
+* ...
+
 
 ## 🧞 Commands
 
