@@ -6,11 +6,14 @@ import SignUpButton from "../TrialSignUpButton.astro";
 ---
 
 <div class="bg-[#fafafa] h-24 p-4 flex justify-between items-center">
-  <div
+  <a
+    href="/"
+    id="landing-page"
+    data-astro-reload
     class="bg-[#defe56] p-4 font-mono700Regular w-fit outline outline-1 outline-[#11111]"
   >
     bad reviews make good movies
-  </div>
+  </a>
 
   <SignedIn>
     <UserButton />
