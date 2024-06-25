@@ -126,8 +126,6 @@ const animationClassNames =
   "after:content-[''] after:bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] after:from-rose-100 after:to-teal-100 after:absolute after:top-0 after:left-0 after:w-full after:h-full after:animate-ping";
 
 export const SearchResults = ({ result }: SearchResultsProps) => {
-  const [showResults, setShowResults] = useState(true);
-
   return (
     <>
       {match(result)
@@ -140,20 +138,7 @@ export const SearchResults = ({ result }: SearchResultsProps) => {
             </div>
           </div>
         ))
-        .with({ status: "success" }, ({ data }) => (
-          <div>
-            <div className="pb-4">
-              <button
-                className="bg-white hover:bg-gray-100 text-[#ED7AC8] font-semibold py-1 px-2 border border-[#ED7AC8] rounded-full shadow"
-                onClick={() => setShowResults(!showResults)}
-              >
-                {showResults ? "🫣 hide results" : "🧐 show results"}
-              </button>
-            </div>
-
-            {showResults ? <Movies movies={data} /> : null}
-          </div>
-        ))
+        .with({ status: "success" }, ({ data }) => <Movies movies={data} />)
         .with({ status: "error" }, ({ error }) => <div>{error.message}</div>)
         .otherwise(() => null)}
     </>
