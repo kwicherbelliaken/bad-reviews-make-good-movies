@@ -13,7 +13,7 @@ I found Google Reviews to be something of an antidote. Not perfect, not by a lon
 This is how I planned to better determine which movies were worth watching and which weren't. I was going to the hoardes for advice! 
 
 <p align="center">
-  <a href="#how-to-use">How To Use</a> •
+  <a href="#the-stack">💻 The Stack</a> •
   <a href="#download">Download</a> •
   <a href="#credits">Credits</a> •
   <a href="#related">Related</a> •
@@ -22,8 +22,20 @@ This is how I planned to better determine which movies were worth watching and w
 
 <img width="1512" alt="Screen Shot 2024-06-26 at 8 05 57 AM" src="https://github.com/kwicherbelliaken/bad-reviews-make-good-movies/assets/35620369/b7858811-cd78-48d5-940f-9223a6b14246">
 
+## The Stack
 
-
+- Astro.
+- SST.
+- GLSL.
+- Middy.
+- Clerk.
+- React.
+- ThreeJS.
+- Zod.
+- Nanostores.
+- TailwindCSS.
+- TypeScript.
+- Vitest.
 
 ## 🧞 Commands
 
