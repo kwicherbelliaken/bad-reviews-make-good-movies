@@ -1,5 +1,20 @@
-# Bad Reviews Make Good Movies
+# [Bad Reviews Make Good Movies](https://badreviewsmakegoodmovies.com/)
 
+👆 That's a link. 👉 This https://badreviewsmakegoodmovies.com/ is also a link. Go check it out. Get out of here. It's boring as hell here. And cold. 
+
+<p align="center">
+  <a href="#the-why">🤔 The Big W "Why?"</a> •
+  <a href="#the-stack">💻 The Stack</a> •
+  <a href="#the-roadmap">🗺 The Roadmap</a>
+</p>
+
+
+Desktop             |  Mobile
+:-------------------------:|:-------------------------:
+![image](https://github.com/kwicherbelliaken/bad-reviews-make-good-movies/assets/35620369/bd8c342b-b30f-4219-bef4-2de84feb4aa2)  |  ![image](https://github.com/kwicherbelliaken/bad-reviews-make-good-movies/assets/35620369/f8628c4f-7a5d-4d26-b7c8-2687dc4ebd93) 
+| ![image](https://github.com/kwicherbelliaken/bad-reviews-make-good-movies/assets/35620369/c3a6dddd-d16e-4552-a2a3-12d04a7e7945) | ![image](https://github.com/kwicherbelliaken/bad-reviews-make-good-movies/assets/35620369/c2a0076e-526d-4582-b825-0dbd2765ff61)
+
+## The Why
 >The next evolutionary step for humankind is to move from man to kind
 
 👆 Bang. You know where I got that? _100 Humanity Quotes That Will Touch Your Heart_. I'm all about people, bro. This project is all about believing in the rightness of the masses. 
@@ -12,44 +27,28 @@ I found Google Reviews to be something of an antidote. Not perfect, not by a lon
 
 This is how I planned to better determine which movies were worth watching and which weren't. I was going to the hoardes for advice! 
 
-<p align="center">
-  <a href="#the-stack">💻 The Stack</a> •
-  <a href="#download">Download</a> •
-  <a href="#credits">Credits</a> •
-  <a href="#related">Related</a> •
-  <a href="#license">License</a>
-</p>
+Did I achieve this? Some of it. I have a lot to do, as is better outlined in the Roadmap.
 
-<img width="1512" alt="Screen Shot 2024-06-26 at 8 05 57 AM" src="https://github.com/kwicherbelliaken/bad-reviews-make-good-movies/assets/35620369/b7858811-cd78-48d5-940f-9223a6b14246">
+## The Roadmap
+
+So much. Goddamn.
+
 
 ## The Stack
 
-- Astro.
-- SST.
-- GLSL.
-- Middy.
-- Clerk.
-- React.
-- ThreeJS.
-- Zod.
-- Nanostores.
-- TailwindCSS.
 - TypeScript.
 - Vitest.
 
-## 🧞 Commands
+### Frontend
+- Astro.
+- GLSL.
+- Clerk.
+- React.
+- ThreeJS.
+- TailwindCSS.
 
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:3000`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+### Backend
+- Astro.
+- [Serverless Stack](https://sst.dev/): Used to deploy my Astro Site to AWS.
+- Middy.
+- Zod.
