@@ -40,6 +40,13 @@ So much. Goddamn.
 - Vitest.
 
 ### Frontend
+
+
+⭐️ The casette seen on the `/watchlist` page is pure CSS, created by [Katie Radford](https://codepen.io/kboedges/pen/xJGmjM). All kudos goes to her and not me. It was public and I stole it.
+
+⭐️ The flower animation on the landing page owes its brilliance to [Ksenia Kondrashova](https://codepen.io/ksenia-k/pen/WNYJOrO). Again, all kudos goes to her and not me. Again, it was public and I liked it so much I stole it. I am a very good bad person.
+
+
 - Astro.
 - GLSL.
 - Clerk.
